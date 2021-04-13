@@ -25,6 +25,13 @@ class PasswordResetRequestController extends Controller
                 'message' => 'Email does not exist.'
             ], Response::HTTP_NOT_FOUND);
         } else {
+            $isOtherToken = DB::table('users')->where('email', $request->email)->where('token_reset_password_at', '>', Carbon::now()->subMinute(Constants::TIME_SEND_RESET_PASSWORD))->first();
+            //dd($isOtherToken);
+            if ($isOtherToken ) {
+                return response()->json([
+                    'message' => 'change password every 5 minutes'
+                ], Response::HTTP_NOT_FOUND);
+            }
             // If email exists
             $this->sendMail($request->email);
             return response()->json([
@@ -54,13 +61,6 @@ class PasswordResetRequestController extends Controller
 
     public function storeToken($token, $email)
     {
-        $isOtherToken = DB::table('users')->where('email', $email)->where('token_reset_password_at', '>', Carbon::now()->subMinute(Constants::TIME_SEND_RESET_PASSWORD))->first();
-        //dd($isOtherToken);
-        if ($isOtherToken) {
-            return response()->json([
-                'message' => 'change password every 5 minutes'
-            ], Response::HTTP_NOT_FOUND);
-        }
         $user = User::where('email', $email)->first();
         $user->token_reset_password = $token;
         $user->token_reset_password_at = Carbon::now();
