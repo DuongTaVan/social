@@ -12,28 +12,28 @@ use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use App\Http\Requests\SendResetPasswordRequest;
 
 
 class PasswordResetRequestController extends Controller
 {
-    public function sendPasswordResetEmail(Request $request)
+    public function sendPasswordResetEmail(SendResetPasswordRequest $request) : object
     {
         // If email does not exist
-        //dd(config('app.url'));
-        if (!$this->validEmail($request->email)) {
+        $email = $request->email ?? "";
+        if (!$this->validEmail($email)) {
             return response()->json([
                 'message' => 'Email does not exist.'
             ], Response::HTTP_NOT_FOUND);
         } else {
-            $isOtherToken = DB::table('users')->where('email', $request->email)->where('token_reset_password_at', '>', Carbon::now()->subMinute(Constants::TIME_SEND_RESET_PASSWORD))->first();
-            //dd($isOtherToken);
+            $isOtherToken = DB::table('users')->where('email', $email)->where('token_reset_password_at', '>', Carbon::now()->subMinute(Constants::TIME_SEND_RESET_PASSWORD))->first();
             if ($isOtherToken ) {
                 return response()->json([
                     'message' => 'change password every 5 minutes'
                 ], Response::HTTP_NOT_FOUND);
             }
             // If email exists
-            $this->sendMail($request->email);
+            $this->sendMail($email);
             return response()->json([
                 'message' => 'Check your inbox, we have sent a link to reset email.',
             ], Response::HTTP_OK);
@@ -52,9 +52,18 @@ class PasswordResetRequestController extends Controller
         return !!User::where('email', $email)->first();
     }
 
-    public function generateToken($email)
+    public function generateToken($email) : string
     {
         $token = Str::random(80);
+        $checkToken = false;
+        while (!$checkToken) {
+            $user = User::where("token_reset_password", $token)->first();
+            if (!$user) {
+                $checkToken = true;
+            } else {
+                $token = Str::random(80);
+            }
+        }
         $this->storeToken($token, $email);
         return $token;
     }
@@ -95,5 +104,4 @@ class PasswordResetRequestController extends Controller
             'message' => 'change password success !'
         ], Response::HTTP_OK);
     }
-
 }
