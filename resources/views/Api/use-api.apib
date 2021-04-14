@@ -1,0 +1,104 @@
+FORMAT: 1A
+
+# Group Authenticate SOCIAL
+
+## Register [/auth/api/register]
+### Register [POST]
++ Response 200 (application/json)
+
+[
+    {
+    "message": "user successfully registered",
+    "users": [
+        {
+        "name": "John Doe",
+        "email": "john@gmail.com",
+        "phone": 0939748336,
+        "block": ['1','2'],
+        "updated_at": "2020-06-16T20:42:51.0000z",
+        "created_at": "2020-06-16T20:42:51.0000z"
+        }
+    ]
+    }
+]
+
+## Login [/auth/api/login]
+### Login [POST]
+
+You need to enter your email and password
+
++ Request 200 (application/json)
+
+{
+    "accecss_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC8xMjcuMC4wLjE6ODAwMFwvYXBpXC9hdXRoXC9sb2dpbiIsImlhdCI6MTYxODM4NTc3NywiZXhwIjoxNjE4Mzg5Mzc3LCJuYmYiOjE2MTgzODU3NzcsImp0aSI6InhWZWRob01RSWVxdUJ2NUwiLCJzdWIiOjU1LCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.W7P-dwrVey6dEwvVflBMmDyySUgCdPEt_kljSecaYmc",
+    "user": [
+        "name" => "john Doe"",
+        "email" => "john@gmail.com",
+        "phone" => "031355454232"
+        "updated_at": "2020-06-16T20:42:51.0000z",
+        "created_at": "2020-06-16T20:42:51.0000z"
+        ]
+}
+
++ Response 422 (application/json)
+
+{
+    "error": "Unauthorized",
+}
+## refresh [/auth/api/refresh]
+### refresh [POST]
++ Request 200 (application/json)
+
+{
+    "access_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC8xMjcuMC4wLjE6ODAwMFwvYXBpXC9hdXRoXC9yZWZyZXNoIiwiaWF0IjoxNjE4Mzg2MjU1LCJleHAiOjE2MTgzODk4ODYsIm5iZiI6MTYxODM4NjI4NiwianRpIjoicDNQM2t1N3QweDQwMjNSeCIsInN1YiI6NTUsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.1s-7ZoqP2Kvwfp39DTVs2TmRPiHPYG4muWHVUBzcVIM",
+    "token_type": "bearer",
+    "expires_in": 3600,
+    "user": {
+        "id": 55,
+        "name": "duongtv",
+        "email": "duongtv2712@gmail.com",
+        "phone": null,
+        "block": null,
+        "token_reset_password": null,
+        "token_reset_password_at": null,
+        "created_at": "2021-04-14T07:36:03.000000Z",
+        "updated_at": "2021-04-14T07:36:03.000000Z"
+    }
+}
+## Login [/auth/api/user-profile]
+### user-profile [GET]
++ response 200 (application/json)
+{
+    "id": 55,
+    "name": "duongtv",
+    "email": "duongtv2712@gmail.com",
+    "phone": null,
+    "block": null,
+    "token_reset_password": "8ujYLgOWg97Svws8khD8TyYUYZP3A9Ak3aVYHhWpfzq0qXJwmkO04TuZu38ZS5F1XWb1ECk27CN3JbRN",
+    "token_reset_password_at": "2021-04-14 15:08:07",
+    "created_at": "2021-04-14T07:36:03.000000Z",
+    "updated_at": "2021-04-14T08:08:07.000000Z"
+}
+## Logout [/auth/api/logout]
+### logout [POST]
++ Response 200 (application/json)
+    "User successfully signed out"
+## reset password [/auth/api/reset-password-request]
+### Reset password [POST]
++ response 200 (application/json)
+    "Check your inbox, we have sent a link to reset email"
+## Change password [/auth/api/change-password]
+### Change password [POST]
++ response 200 (application/json)
+    "change password success !"
+## Check token reset password at [/check-token-reset-password-at/{token}]
+### Check token reset password at [GET]
++ response 404 (application/json)
+{
+    "error": "change password every 5 minutes"
+}
++ response 404 (application/json)
+{
+    "password change over time"
+}
+

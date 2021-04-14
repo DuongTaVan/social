@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Symfony\Component\HttpFoundation\Response;
+use App\Enums\Lang;
 use Validator;
+use Auth;
 
 class AuthController extends BaseController
 {
@@ -36,7 +38,7 @@ class AuthController extends BaseController
         }
 
         if (!$token = auth()->attempt($validator->validated())) {
-            return $this->responseError('Unauthorized', Response::HTTP_UNAUTHORIZED);
+            return $this->responseError(Lang::ERR_UNAUTHORIZED, Response::HTTP_UNAUTHORIZED);
         }
 
         return $this->createNewToken($token);
@@ -54,10 +56,6 @@ class AuthController extends BaseController
             'email' => 'required|string|email|max:100|unique:users',
             'password' => 'required|string|confirmed|min:6',
         ]);
-
-//        if ($validator->fails()) {
-//            return $this->responseError($validator->errors()->toJson(), Response::HTTP_BAD_REQUEST);
-//        }
 
         $user = User::create(array_merge(
             $validator->validated(),
@@ -79,7 +77,7 @@ class AuthController extends BaseController
     public function logout()
     {
         auth()->logout();
-        return $this->responseSuccess('User successfully signed out', Response::HTTP_OK);
+        return $this->responseSuccess(Lang::SIGN_OUT_SUCCESS, Response::HTTP_OK);
     }
 
     /**

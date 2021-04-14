@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\Constants;
+use App\Enums\Lang;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Symfony\Component\HttpFoundation\Response;
@@ -32,13 +33,11 @@ class PasswordResetRequestController extends BaseController
         User::where('email', $email)->firstOrFail();
         $isExistToken = $this->userRepository->isExistToken('email', $email, Carbon::now()->subMinute(Constants::TIME_SEND_RESET_PASSWORD));
         if ($isExistToken) {
-            $err = 'change password every 5 minutes';
-            return $this->responseError($err, Response::HTTP_NOT_FOUND);
+            return $this->responseError(Lang::CHECK_PASSWORD_5_MINUTES, Response::HTTP_NOT_FOUND);
         }
         // If email exists
         $this->sendMail($email);
-        $data = 'Check your inbox, we have sent a link to reset email.';
-        return $this->responseSuccess($data, Response::HTTP_OK);
+        return $this->responseSuccess(Lang::CHECK_INBOX_MESSAGE, Response::HTTP_OK);
 
     }
 
@@ -74,8 +73,7 @@ class PasswordResetRequestController extends BaseController
     {
         $isExistToken = $this->userRepository->isExistToken('token_reset_password', $token, Carbon::now()->subMinute(Constants::TIME_RESET_PASSWORD));
         if (!$isExistToken) {
-            $err = 'password change over time';
-            return $this->responseError($err, Response::HTTP_NOT_FOUND);
+            return $this->responseError(Lang::CHECK_PASSWORD_OVER_TIME, Response::HTTP_NOT_FOUND);
         }
         $data = $isExistToken->email;
         return $this->responseSuccess($data, Response::HTTP_OK);
@@ -84,7 +82,7 @@ class PasswordResetRequestController extends BaseController
 
     public function changePassword(Request $request)
     {
-        $this->userRepository->changePassword($request->email);
-        return $this->responseSuccess('change password success !', Response::HTTP_OK);
+        $this->userRepository->changePassword($request->email, $request->password);
+        return $this->responseSuccess(Lang::MESSAGE_SUCCESS, Response::HTTP_OK);
     }
 }
