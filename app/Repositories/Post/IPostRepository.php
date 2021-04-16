@@ -3,7 +3,7 @@
 namespace App\Repositories\Post;
 interface IPostRepository
 {
-    public function listPost();
+    public function getListPosts();
 
     public function addPost($request);
 
@@ -13,7 +13,7 @@ interface IPostRepository
 
     public function removePost($id);
 
-    public function userLike($id);
+    public function getUsersLike($id);
 
-    public function userShare($id);
+    public function getUsersShare($id);
 }

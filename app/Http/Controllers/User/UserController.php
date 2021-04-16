@@ -17,24 +17,33 @@ class UserController extends BaseController
         $this->userRepository = $userRepository;
     }
 
-    public function listUserBlock()
+    public function getListUsersBlock()
     {
-        return $this->userRepository->listUserBlock();
+        $users = $this->userRepository->getListUserBlock();
+        return $users;
     }
 
     public function addUserBlock(Request $request)
     {
-        return $this->userRepository->addUserBlock($request->block);
+        $userBlock = $this->userRepository->addUserBlock($request->block);
+        return $userBlock;
     }
 
     public function removeUserBlock(Request $request)
     {
-        return $this->userRepository->removeUserBlock($request->block);
+        $userBlock = $this->userRepository->removeUserBlock($request->block);
+        return $userBlock;
     }
 
     public function changeInfo(Request $request)
     {
-        return $this->userRepository->changeInfo($request->name, $request->password);
+        $inFo = $this->userRepository->changeInfo($request->name, $request->password);
+        return $inFo;
     }
 
+    public function searchUser(Request $request)
+    {
+        $user = $this->userRepository->searchUser($request);
+        return $user;
+    }
 }
