@@ -11,6 +11,7 @@ class Lang
     const ERR_UNAUTHORIZED = "Unauthorized";
     const SIGN_OUT_SUCCESS = "User successfully signed out";
     const USER_ALREADY_EXIST = "user already exists";
+    const USER_WAS_BLOCK = "this user was blocked";
     const ADD_SUCCESS = "add success";
     const USER_NOT_IN_THE_LIST = "user not in the list";
     const REMOVE_SUCCESS = "remove success";
@@ -28,7 +29,11 @@ class Lang
     const COMMENT_SUCCESS = "Comment success";
     const UPDATE_COMMENT_SUCCESS = "update comment success";
     const REMOVE_COMMENT_SUCCESS = "remove comment success";
+    const REMOVE_COMMENT_ERR = "remove comment error";
     const REMOVE_LIKE_SUCCESS = "remove like success";
     const ADD_LIKE_SUCCESS = "add like success";
     const POST_UPLOAD_ERR = "post upload error";
+    const POST_REMOVE_ERR = "post remove error";
+    const ADD_USER_BLOCK_ERR = "add user block err";
+    const LIST_USER_BLOCK = "do not user block";
 }

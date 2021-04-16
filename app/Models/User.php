@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
+use Illuminate\Support\Facades\Storage;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable implements JWTSubject
@@ -21,10 +22,11 @@ class User extends Authenticatable implements JWTSubject
     protected $fillable = [
         'name',
         'email',
-        'password'
+        'password',
+        'phone',
+        'avatar'
     ];
 
-    protected $appends = ['users'];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -55,6 +57,12 @@ class User extends Authenticatable implements JWTSubject
         return $this->getKey();
     }
 
+    public $appends = ["urlAvatar"];
+
+    public function getUrlAvatarAttribute($key)
+    {
+        return config('app.url').'/storage'.$this->avatar;
+    }
     /**
      * Return a key value array, containing any custom claims to be added to the JWT.
      *

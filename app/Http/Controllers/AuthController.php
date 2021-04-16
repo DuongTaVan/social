@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\Response;
 use App\Enums\Lang;
 use Validator;
@@ -55,6 +56,7 @@ class AuthController extends BaseController
             'name' => 'required|string|between:2,100',
             'email' => 'required|string|email|max:100|unique:users',
             'password' => 'required|string|confirmed|min:6',
+            'phone' => 'required|min:9|max:12',
         ]);
 
         $user = User::create(array_merge(
@@ -97,6 +99,8 @@ class AuthController extends BaseController
      */
     public function userProfile()
     {
+//        $userProfile = auth()->user()->toArray();
+//        $userProfile['url_avatar'] = Storage::disk("public")->url($userProfile['avatar']);
         return $this->responseSuccess(auth()->user(), Response::HTTP_OK);
     }
 

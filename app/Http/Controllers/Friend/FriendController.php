@@ -5,52 +5,81 @@ namespace App\Http\Controllers\Friend;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Enums\Lang;
+use App\Http\Controllers\BaseController;
 use App\Http\Resources\FriendResource;
 use App\Repositories\Friend\FriendRepository;
 use Symfony\Component\HttpFoundation\Response;
 
 class FriendController extends BaseController
 {
+    /**
+     * @var friendRepository
+     */
     public $friendRepository;
 
+    /**
+     * @param FriendRepository $friendRepository
+     */
     public function __construct(FriendRepository $friendRepository)
     {
         $this->friendRepository = $friendRepository;
     }
 
-    public function getListFriends()
+    /**
+     * @return json //list friend
+     */
+    public function getFriends()
     {
-        $users = $this->friendRepository->getListFriends();
+        $users = $this->friendRepository->getFriends();
         return FriendResource::collection($users);
     }
 
-    public function requestFriend()
+    /**
+     * @return json //list user request
+     */
+    public function request()
     {
-        $users = $this->friendRepository->requestFriend();
+        $users = $this->friendRepository->request();
         return FriendResource::collection($users);
     }
 
-    public function sendRequestFriend(Request $request, $id)
+    /**
+     * @param int $id //id friend
+     * @return json $message
+     */
+    public function sendRequest($id)
     {
-        $this->friendRepository->sendRequestFriend($request, $id);
-        return $this->responseSuccess(Lang::SEND_REQUEST_FRIEND_SUCCESS, Response::HTTP_OK);
+        $friend = $this->friendRepository->sendRequest($id);
+        return $friend;
     }
 
-    public function removeFriend($id)
+    /**
+     * @param int $id //id friend
+     * @return json $message
+     */
+    public function remove($id)
     {
-        $this->friendRepository->removeFriend($id);
+        $this->friendRepository->remove($id);
         return $this->responseSuccess(Lang::REMOVE_FRIEND_SUCCESS, Response::HTTP_OK);
     }
 
-    public function acceptFriend($id)
+    /**
+     * @param int $id //id friend
+     * @return json $message
+     */
+    public function accept($id)
     {
-        $this->friendRepository->acceptFriend($id)
+        $this->friendRepository->accept($id);
         return $this->responseSuccess(Lang::ADD_FRIEND_SUCCESS, Response::HTTP_OK);
     }
 
-    public function removeRequestFriend($id)
+    /**
+     * @param int $id //id friend
+     * @return json $message
+     */
+    public function removeRequest($id)
     {
-        $this->friendRepository->removeRequestFriend($id);
+        $this->friendRepository->removeRequest($id);
         return $this->responseSuccess(Lang::REMOVE_REQUEST_FRIEND_SUCCESS, Response::HTTP_OK);
     }
 }

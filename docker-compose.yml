@@ -1,0 +1,58 @@
+version: '3.4'
+services:
+
+  #PHP Service
+  app:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
+    restart: unless-stopped
+    volumes:
+      - ./:/var/www/html
+      - ./docker/php.ini:/usr/local/etc/php/php.ini
+  #VUE Service
+  frontend:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile_frontend
+    restart: always
+    command: sh -c "npm install && npm run serve"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules/
+    ports:
+      - "5000:8080"
+    environment:
+      HOST: 0.0.0.0
+  #Nginx Service
+  webserver:
+    image: nginx:1.17-alpine
+    restart: unless-stopped
+    ports:
+      - "8000:80"
+    volumes:
+      - ./:/var/www/html
+      - ./docker/nginx.conf:/etc/nginx/conf.d/default.conf
+  #Nginx db
+  db:
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_DATABASE: social
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - ./mysql-data:/ect/mysql/conf.d
+  #Nginx phpmyadmin
+  phpmyadmin:
+    image: phpmyadmin
+    restart: always
+    depends_on:
+      - db
+    ports:
+      - 8080:80
+    environment:
+      - PMA_ARBITRARY=1
+      - PMA_HOST=db
+      - PMA_USER=root
+      - PMA_PASSWORD=root

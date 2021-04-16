@@ -20,4 +20,11 @@ class Comment extends Model
     {
         return $this->hasMany('App\Models\Comment', 'comment_id');
     }
+    public function likeComment()
+    {
+        return $this->hasMany('App\Models\Cm_like', 'comment_id');
+    }
+    public function user(){
+        return $this->belongsTo('App\Models\User','user_id');
+    }
 }

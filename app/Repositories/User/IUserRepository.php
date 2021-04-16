@@ -12,14 +12,20 @@ interface IUserRepository
 
     public function checkToken($token);
 
-    public function getListUsersBlock();
+    public function getUsersBlock();
 
-    public function addUserBlock($blog);
+    public function addUserBlock($block);
 
-    public function removeUserBlock($blog);
+    public function removeUserBlock($block);
 
-    public function changeInfo($name, $password);
+    public function changeInfo($request);
 
-    public function searchUser($request);
+    public function search($request);
+
+    public function profileFriend($id);
+
+    public function getFollowers();
+
+    public function getListFollowing();
 }
 

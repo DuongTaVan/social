@@ -4,13 +4,13 @@ namespace App\Repositories\Comment;
 
 interface ICommentRepository
 {
-    public function addComment($request, $id);
+    public function add($request, $id);
 
-    public function detailComment($id);
+    public function detail($id);
 
-    public function updateComment($request, $id);
+    public function update($request, $id);
 
-    public function removeComment($id);
+    public function remove($id);
 
-    public function getListComment($id);
+    public function getComments($id);
 }

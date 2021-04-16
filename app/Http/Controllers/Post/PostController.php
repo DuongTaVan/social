@@ -12,64 +12,106 @@ use Symfony\Component\HttpFoundation\Response;
 
 class PostController extends BaseController
 {
+    /**
+     * @var postRepository
+     */
     public $postRepository;
-
+    /**
+     * @param PostRepository $postRepository
+     */
     public function __construct(PostRepository $postRepository)
     {
         $this->postRepository = $postRepository;
     }
-
-    public function getListPosts()
+    /**
+     * @return json //list post
+     */
+    public function getPosts()
     {
-        $posts = $this->postRepository->getListPosts();
+        $posts = $this->postRepository->getPosts();
         return $posts;
     }
-
-    public function getListFriendPosts($friendId)
+    /**
+     * @param int $id //id friend
+     * @return json //list post of friend
+     */
+    public function getFriendPosts($friendId)
     {
-        $posts = $this->postRepository->getListFriendPosts($friendId);
+        $posts = $this->postRepository->getFriendPosts($friendId);
         return $posts;
     }
-
-    public function addPost(PostRequest $request)
+    /**
+     * @param int|string $request //data
+     * @return json $message
+     */
+    public function add(PostRequest $request)
     {
-        $this->postRepository->addPost($request);
+        $this->postRepository->add($request);
         return $this->responseSuccess(Lang::ADD_POST_SUCCESS, Response::HTTP_OK);
     }
-
-    public function detailPost($id)
+    /**
+     * @param int $id //id post
+     * @return json //data of detail post
+     */
+    public function detail($id)
     {
-        $post = $this->postRepository->detailPost($id);
+        $post = $this->postRepository->detail($id);
         return new PostResource($post);
     }
-
-    public function updatePost(PostRequest $request, $id)
+    /**
+     * @param int $id //id post
+     * @param int|string $request //data
+     * @return json $message
+     */
+    public function update(PostRequest $request, $id)
     {
-        $this->postRepository->updatePost($request, $id);
+        $this->postRepository->update($request, $id);
         return $this->responseSuccess(Lang::UPDATE_POST_SUCCESS, Response::HTTP_OK);
     }
-
-    public function removePost($id)
+    /**
+     * @param int $id //id post
+     * @return json $message
+     */
+    public function remove($id)
     {
-        $this->postRepository->removePost($id);
+        $this->postRepository->remove($id);
         return $this->responseSuccess(Lang::REMOVE_POST_SUCCESS, Response::HTTP_OK);
     }
-
+    /**
+     * @param int $id //id user like post
+     * @param int|string $request //data
+     * @return json //list user like post
+     */
     public function getUsersLike($id)
     {
         $post = $this->postRepository->getUsersLike($id);
         return PostResource::collection($post);
     }
-
+    /**
+     * @param int $id //id post
+     * @return json //list user share post
+     */
     public function getUsersShare($id)
     {
         $users = $this->postRepository->getUsersShare($id);
         return PostResource::collection($users);
     }
-
-    public function sharePost($id, PostRequest $request)
+    /**
+     * @param int $id //id post
+     * @param int|string $request //data
+     * @return json $message
+     */
+    public function share($id, PostRequest $request)
     {
-        $this->postRepository->sharePost($id, $request);
+        $this->postRepository->share($id, $request);
         return $this->responseSuccess(Lang::ADD_POST_SUCCESS, Response::HTTP_OK);
+    }
+    /**
+     * @return json //list post home
+     */
+    public function getPostsHome()
+    {
+        $posts = $this->postRepository->getPostsHome();
+        return PostResource::collection($posts);
     }
 }

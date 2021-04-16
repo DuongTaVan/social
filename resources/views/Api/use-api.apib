@@ -106,7 +106,7 @@ FORMAT: 1A
 
 # Group User SOCIAL
 
-## LIST USER BLOCK [/auth/api/user/list-user-block]
+## LIST USER BLOCK [/api/user/list-user-block]
 ### List user block [GET]
 + Response 200 (application/json)
 
@@ -150,7 +150,7 @@ FORMAT: 1A
     }
 ]
 
-## ADD USER BLOCK [/auth/api/user/add-user-block]
+## ADD USER BLOCK [/api/user/add-user-block]
 ### Add user block [POST]
 
 + Request 200 (application/json)
@@ -164,7 +164,7 @@ FORMAT: 1A
 {
     "error": "user already exists"
 }
-## REMOVE USER BLOCK [/auth/api/user/remove-user-block]
+## REMOVE USER BLOCK [/api/user/remove-user-block]
 ### Remove user block [POST]
 
 + Request 200 (application/json)
@@ -178,7 +178,7 @@ FORMAT: 1A
 {
     "error": "user not in the list"
 }
-## CHANGE INFORMATION [/auth/api/user/change-information]
+## CHANGE INFORMATION [/api/user/change-information]
 ### change information [POST]
 
 + Request 200 (application/json)
@@ -187,7 +187,7 @@ FORMAT: 1A
     "Change information success"
 }
 
-## SEARCH USER [/auth/api/user/search-user]
+## SEARCH USER [/api/user/search-user]
 ### change information [GET]
 
 + Request 200 (application/json)
@@ -280,10 +280,10 @@ FORMAT: 1A
 
 FORMAT: 1A
 
-# Group POST SOCIAL
+# Group COMMENT SOCIAL
 
-## LIST POST [/auth/api/post/list-post]
-### List post[GET]
+## LIST COMMENT [/api/comment/list-comment/1]
+### List comment[GET]
 + Response 200 (application/json)
 
 [
@@ -291,349 +291,107 @@ FORMAT: 1A
 
        "data": [
                {
-                   "id": 62,
-                   "content": "duong th",
-                   "status": 1,
-                   "created_by": 1,
-                   "share_post_id": null,
-                   "created_at": "2021-04-20T06:48:27.000000Z",
-                   "updated_at": "2021-04-20T06:48:27.000000Z",
-                   "count_user_count": 0,
-                   "like_count": 0,
-                   "file": [
-                       {
-                           "id": 26,
-                           "name": "/images/16189013073gCPv.png",
-                           "post_id": 62,
-                           "created_at": "2021-04-20T06:48:27.000000Z",
-                           "updated_at": "2021-04-20T06:48:27.000000Z",
-                           "filePath": "http://localhost:8000/storage/images/16189013073gCPv.png"
-                       },
-                       {
-                           "id": 27,
-                           "name": "/images/1618901307RokSU.png",
-                           "post_id": 62,
-                           "created_at": "2021-04-20T06:48:27.000000Z",
-                           "updated_at": "2021-04-20T06:48:27.000000Z",
-                           "filePath": "http://localhost:8000/storage/images/1618901307RokSU.png"
-                       }
-                   ]
+                   "id": 6,
+                   "content": "fafafa",
+                   "comment_id": null,
+                   "post_id": 117,
+                   "user_id": 37,
+                   "created_at": null,
+                   "updated_at": null,
+                   "rep_comment": []
                }
-           ],
-           "links": {
-               "first": "http://127.0.0.1:8000/api/post/list-post/1?page=1",
-               "last": "http://127.0.0.1:8000/api/post/list-post/1?page=1",
-               "prev": null,
-               "next": null
-           },
-           "meta": {
-               "current_page": 1,
-               "from": 1,
-               "last_page": 1,
-               "links": [
-                   {
-                       "url": null,
-                       "label": "&laquo; Previous",
-                       "active": false
-                   },
-                   {
-                       "url": "http://127.0.0.1:8000/api/post/list-post/1?page=1",
-                       "label": "1",
-                       "active": true
-                   },
-                   {
-                       "url": null,
-                       "label": "Next &raquo;",
-                       "active": false
-                   }
-               ],
-               "path": "http://127.0.0.1:8000/api/post/list-post/1",
-               "per_page": 2,
-               "to": 1,
-               "total": 1
-           }
+           ]
         }
 ]
-## LIST POST [/auth/api/post/list-post-friend]
-### List post friend[GET]
+## ADD COMMENT [/api/comment/add-comment/1]
+### Add comment[POST]
 + Response 200 (application/json)
 
 [
     {
 
-   "data": [
-           {
-               "id": 62,
-               "content": "duong th",
-               "status": 1,
-               "created_by": 1,
-               "share_post_id": null,
-               "created_at": "2021-04-20T06:48:27.000000Z",
-               "updated_at": "2021-04-20T06:48:27.000000Z",
-               "count_user_count": 0,
-               "like_count": 0,
-               "file": [
-                   {
-                       "id": 26,
-                       "name": "/images/16189013073gCPv.png",
-                       "post_id": 62,
-                       "created_at": "2021-04-20T06:48:27.000000Z",
-                       "updated_at": "2021-04-20T06:48:27.000000Z",
-                       "filePath": "http://localhost:8000/storage/images/16189013073gCPv.png"
-                   },
-                   {
-                       "id": 27,
-                       "name": "/images/1618901307RokSU.png",
-                       "post_id": 62,
-                       "created_at": "2021-04-20T06:48:27.000000Z",
-                       "updated_at": "2021-04-20T06:48:27.000000Z",
-                       "filePath": "http://localhost:8000/storage/images/1618901307RokSU.png"
-                   }
-               ]
-           }
-       ],
-       "links": {
-           "first": "http://127.0.0.1:8000/api/post/list-post/1?page=1",
-           "last": "http://127.0.0.1:8000/api/post/list-post/1?page=1",
-           "prev": null,
-           "next": null
-       },
-       "meta": {
-           "current_page": 1,
-           "from": 1,
-           "last_page": 1,
-           "links": [
-               {
-                   "url": null,
-                   "label": "&laquo; Previous",
-                   "active": false
-               },
-               {
-                   "url": "http://127.0.0.1:8000/api/post/list-post/1?page=1",
-                   "label": "1",
-                   "active": true
-               },
-               {
-                   "url": null,
-                   "label": "Next &raquo;",
-                   "active": false
-               }
-           ],
-           "path": "http://127.0.0.1:8000/api/post/list-post/1",
-           "per_page": 2,
-           "to": 1,
-           "total": 1
-       }
-    }
+       "add comment success"
+        }
 ]
+## DETAIL COMMENT [/api/comment/detail-comment/1]
+### detail comment[GET]
++ Response 200 (application/json)
 
-## ADD POST [/auth/api/post/add-post]
-### Add post [POST]
-
-+ Request 200 (application/json)
-
-{
-    "add post success"
-}
-
-## REMOVE POST [/auth/api/post/remove-post]
-### Remove post block [POST]
-
-+ Request 200 (application/json)
-
-{
-    "remove post success"
-}
-
-## DETAIL POST [/auth/api/post/detail-post/2]
-### detail post [GET]
-
-+ Request 200 (application/json)
-
-{
-    "data": {
-            "id": 4,
-            "content": "fdfsffdfgggg",
-            "status": 1,
-            "created_by": 57,
-            "share_post_id": null,
+[
+    {
+        "data": {
+            "id": 6,
+            "content": "fafafa",
+            "comment_id": null,
+            "post_id": 117,
+            "user_id": 37,
             "created_at": null,
             "updated_at": null
         }
-}
+    }
+]
+## UPDATE COMMENT [/api/comment/update-comment/1]
+### update comment[POST]
++ Response 200 (application/json)
 
-## UPDATE POST [/auth/api/post/update-post/2]
-### update post [POST]
+[
+    {
+        "update comment  success"
+    }
+]
+## REMOVE COMMENT [/api/comment/remove-comment/1]
+### remove comment[POST]
++ Response 200 (application/json)
 
-+ Request 200 (application/json)
+[
+    {
+        "remove comment  success"
+    }
+]
 
-{
-    "update post success"
-}
-## REMOVE POST [/auth/api/post/remove-post/2]
-### remove post [POST]
 
-+ Request 200 (application/json)
 
-{
-    "remove post success"
-}
-## USER LIKE [/auth/api/post/user-like/2]
-### user like [POST]
-
-+ Request 200 (application/json)
-
-{
-   "data": [
-           {
-               "id": 4,
-               "content": "test 12345",
-               "status": 1,
-               "created_by": 57,
-               "share_post_id": null,
-               "created_at": null,
-               "updated_at": "2021-04-19T02:46:46.000000Z",
-               "like": []
-           }
-       ]
-}
-## USER SHARE [/auth/api/post/user-share/2]
-### user-share [POST]
-
-+ Request 200 (application/json)
-
-{
-    "data": [
-            {
-                "id": 4,
-                "content": "test 12345",
-                "status": 1,
-                "created_by": 57,
-                "share_post_id": null,
-                "created_at": null,
-                "updated_at": "2021-04-19T02:46:46.000000Z",
-                "count_user": []
-            }
-        ]
-}
 FORMAT: 1A
 
-# Group FRIEND SOCIAL
+# Group LIKE POST & COMMENT
 
-## LIST FRIEND [/auth/api/friend/list-friend]
-### List friend[GET]
+## ADD LIKE POST [/api/like/add-like/1]
+### add like post[POST]
 + Response 200 (application/json)
 
 [
     {
 
-    "data": [
-            {
-                "id": 57,
-                "name": "duongtv",
-                "email": "duongtv2712@gmail.com",
-                "phone": null,
-                "created_at": "2021-04-19T02:40:25.000000Z",
-                "updated_at": "2021-04-19T02:40:25.000000Z",
-                "users": [
-                    {
-                        "id": 19,
-                        "from_id": 18,
-                        "to_id": 57,
-                        "status": 1,
-                        "created_at": null,
-                        "updated_at": null
-                    }
-                ]
-            }
-        ]
+       "add like success"
     }
 ]
+## REMOVE LIKE [/api/like/remove-like/1]
+### remove like post[POST]
++ Response 200 (application/json)
 
-## REQUEST FRIEND [/auth/api/friend/request-friend]
-### Request friend [POST]
+[
+    {
 
-+ Request 200 (application/json)
+       "remove like success"
+    }
+]
+## ADD LIKE COMMENT [/api/like/add-like-comment/1]
+### add like comment[POST]
++ Response 200 (application/json)
 
-{
-    "data": [
-            {
-                "id": 57,
-                "name": "duongtv",
-                "email": "duongtv2712@gmail.com",
-                "phone": null,
-                "created_at": "2021-04-19T02:40:25.000000Z",
-                "updated_at": "2021-04-19T02:40:25.000000Z",
-                "users": [
-                    {
-                        "id": 23,
-                        "from_id": 57,
-                        "to_id": 1,
-                        "status": 0,
-                        "created_at": "2021-04-19T03:00:51.000000Z",
-                        "updated_at": "2021-04-19T03:00:51.000000Z"
-                    },
-                    {
-                        "id": 20,
-                        "from_id": 2,
-                        "to_id": 57,
-                        "status": 0,
-                        "created_at": null,
-                        "updated_at": null
-                    },
-                    {
-                        "id": 21,
-                        "from_id": 54,
-                        "to_id": 57,
-                        "status": 0,
-                        "created_at": null,
-                        "updated_at": null
-                    },
-                    {
-                        "id": 22,
-                        "from_id": 3,
-                        "to_id": 57,
-                        "status": 0,
-                        "created_at": null,
-                        "updated_at": null
-                    }
-                ]
-            }
-        ]
-}
+[
+    {
 
-## SEND REQUEST FRIEND [/auth/api/friend/send-request-friend]
-### send request friend [POST]
+       "add like comment success"
+    }
+]
+## REMOVE LIKE COMMENT [/api/like/remove-like-comment/1]
+### remove like comment[POST]
++ Response 200 (application/json)
 
-+ Request 200 (application/json)
+[
+    {
 
-{
-    "send request friend success"
-}
-
-## REMOVE FRIEND [/auth/api/friend/remove-friend/2]
-### remove friend [POST]
-
-+ Request 200 (application/json)
-
-{
-    "remove request friend success"
-}
-
-## ACCEPT FRIEND [/auth/api/friend/accept-friend/2]
-### accept friend [POST]
-
-+ Request 200 (application/json)
-
-{
-    "accept request success"
-}
-## REMOVE POST [/auth/api/friend/remove-post/2]
-### remove post [POST]
-
-+ Request 200 (application/json)
-
-{
-    "remove post success"
-}
-
+       "remove like comment success"
+    }
+]

@@ -1,0 +1,171 @@
+
+* {
+    font-size: 13px;
+}
+
+.main {
+    .profile {
+        h4 {
+            color: #6b5a58;
+        }
+    }
+
+    .user-post {
+        display: flex;
+
+        .user-post-if {
+            margin-left: 5px;
+        }
+    }
+
+    .cmt {
+        display: flex;
+        justify-content: space-between;
+
+        i, p {
+            color: #b7a6a6;
+            cursor: pointer;
+        }
+
+        i:hover {
+            color: #f15959;
+        }
+    }
+
+
+    .list-friend {
+        display: flex;
+    }
+
+    .if-user {
+        display: flex;
+        align-items: center;
+    }
+
+    .user-comment {
+        display: none;
+    }
+
+    .displayUserComment {
+        display: block;
+    }
+
+    .like-active {
+        color: #f15959 !important;
+    }
+
+    .op-friend {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .sub_cmt {
+        display: flex;
+
+        p {
+            margin-right: 40px;
+            margin-bottom: 0;
+        }
+
+        i {
+            font-size: 12px;
+            color: #b7a6a6;
+            cursor: pointer;
+
+            &:hover {
+                color: #f15959;
+            }
+        }
+    }
+
+    .content-comment {
+        margin-bottom: 0;
+        margin-top: 5px;
+    }
+
+    .cmt-ac {
+        margin-left: 5px;
+    }
+}
+
+.op_user {
+    display: flex;
+    justify-content: space-between;
+}
+
+.edit_delete {
+    display: block !important;
+}
+
+.post_option {
+    display: none;
+    list-style: none;
+    position: absolute;
+    left: -18px;
+    top: -13px;
+
+    li {
+        a {
+            text-decoration: none;
+            color: #111;
+        }
+    }
+}
+
+.option {
+    display: flex;
+    flex-direction: row-reverse;
+    position: relative;
+
+    i, li {
+        cursor: pointer;
+    }
+}
+
+.modal-popup {
+    width: 500px;
+    margin: 0px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 2px;
+    box-shadow: 0 2px 8px 3px;
+    transition: all 0.2s ease-in;
+    font-family: Helvetica, Arial, sans-serif;
+}
+
+.fadeIn-enter {
+    opacity: 0;
+}
+
+.fadeIn-leave-active {
+    opacity: 0;
+    transition: all 0.2s step-end;
+}
+
+.fadeIn-enter .modal-popup,
+.fadeIn-leave-active.modal-popup {
+    transform: scale(1.1);
+}
+
+button {
+    padding: 7px;
+    margin-top: 10px;
+    background-color: green;
+    color: white;
+    font-size: 1.1rem;
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    background: #00000094;
+    z-index: 999;
+    transition: opacity 0.2s ease;
+}
