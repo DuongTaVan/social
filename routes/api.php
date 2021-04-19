@@ -37,10 +37,11 @@ Route::group([
     'prefix' => 'user'
 
 ], function ($router) {
-    Route::post('/list-user-block', 'User\UserController@listUserBlock');
+    Route::post('/list-user-block', 'User\UserController@getListUsersBlock');
     Route::post('/add-user-block', 'User\UserController@addUserBlock');
     Route::post('/remove-user-block', 'User\UserController@removeUserBlock');
     Route::post('/change-information', 'User\UserController@changeInfo');
+    Route::get('/search-user', 'User\UserController@searchUser');
 });
 
 Route::group([
@@ -48,13 +49,13 @@ Route::group([
     'prefix' => 'post'
 
 ], function ($router) {
-    Route::post('/list-post', 'Post\PostController@listPost');
+    Route::post('/list-post', 'Post\PostController@getListPosts');
     Route::post('/add-post', 'Post\PostController@addPost');
     Route::get('/detail-post/{id}', 'Post\PostController@detailPost');
     Route::post('/update-post/{id}', 'Post\PostController@updatePost');
     Route::post('/remove-post/{id}', 'Post\PostController@removePost');
-    Route::post('/user-like/{id}', 'Post\PostController@userLike');
-    Route::post('/user-share/{id}', 'Post\PostController@userShare');
+    Route::post('/user-like/{id}', 'Post\PostController@getUsersLike');
+    Route::post('/user-share/{id}', 'Post\PostController@getUsersShare');
 });
 
 Route::group([
@@ -62,8 +63,13 @@ Route::group([
     'prefix' => 'friend'
 
 ], function ($router) {
-    Route::post('/list-friend', 'Friend\FriendController@listFriend');
+    Route::post('/list-friend', 'Friend\FriendController@getListFriends');
+    Route::post('/request-friend', 'Friend\FriendController@requestFriend');
+    Route::post('/send-request-friend/{id}', 'Friend\FriendController@sendRequestFriend');
+    Route::post('/remove-friend/{id}', 'Friend\FriendController@removeFriend');
+    Route::post('/accept-friend/{id}', 'Friend\FriendController@acceptFriend');
+    Route::post('/remove-request-friend/{id}', 'Friend\FriendController@removeRequestFriend');
 });
-Route::get("/docs", function() {
+Route::get("/docs", function () {
     return view("Api.api");
 });

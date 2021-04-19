@@ -21,8 +21,10 @@ class User extends Authenticatable implements JWTSubject
     protected $fillable = [
         'name',
         'email',
-        'password',
+        'password'
     ];
+
+    protected $appends = ['users'];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -64,5 +66,17 @@ class User extends Authenticatable implements JWTSubject
     }
     public function post(){
         return $this->hasMany('App\Models\Post','created_by', 'id');
+    }
+
+    public function userFrom(){
+        return $this->hasMany('App\Models\Friend', 'from_id', 'id');
+    }
+
+    public function userTo(){
+        return $this->hasMany('App\Models\Friend', 'to_id', 'id');
+    }
+
+    public function getUsersAttribute() {
+        return $this->userFrom->merge($this->userTo);
     }
 }

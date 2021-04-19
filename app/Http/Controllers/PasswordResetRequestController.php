@@ -26,6 +26,12 @@ class PasswordResetRequestController extends BaseController
         $this->userRepository = $userRepository;
     }
 
+    /**
+     * @param float $SendResetPasswordRequest //validate
+     * @param float $token
+     * @param float $email
+     * @return json $result
+     */
     public function sendPasswordResetEmail(SendResetPasswordRequest $request): object
     {
         // If email does not exist
@@ -41,6 +47,10 @@ class PasswordResetRequestController extends BaseController
 
     }
 
+    /**
+     * @param float $email
+     * @return json $result
+     */
 
     public function sendMail($email)
     {
@@ -49,9 +59,12 @@ class PasswordResetRequestController extends BaseController
         Mail::to($email)->send(new SendMail($token));
     }
 
+    /**
+     * @param float $email
+     * @return json $result
+     */
     public function generateToken($email): string
     {
-
         $checkToken = false;
         while (!$checkToken) {
             $token = Str::random(80);
@@ -64,11 +77,20 @@ class PasswordResetRequestController extends BaseController
         return $token;
     }
 
+    /**
+     * @param float $token
+     * @param float $email
+     * @return json $result
+     */
     public function storeToken($token, $email)
     {
         $user = $this->userRepository->storeToken($token, $email);
     }
 
+    /**
+     * @param float $token
+     * @return json $result
+     */
     public function checkTokenResetPasswordAt($token)
     {
         $isExistToken = $this->userRepository->isExistToken('token_reset_password', $token, Carbon::now()->subMinute(Constants::TIME_RESET_PASSWORD));
@@ -80,9 +102,13 @@ class PasswordResetRequestController extends BaseController
 
     }
 
+    /**
+     * @param int|float $request //data
+     * @return json $result
+     */
     public function changePassword(Request $request)
     {
-        $this->userRepository->changePassword($request->email, $request->password);
+        $this->userRepository->changePassword($request);
         return $this->responseSuccess(Lang::MESSAGE_SUCCESS, Response::HTTP_OK);
     }
 }

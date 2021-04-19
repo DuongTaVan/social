@@ -15,38 +15,45 @@ class PostController extends Controller
         $this->postRepository = $postRepository;
     }
 
-    public function listPost()
+    public function getListPosts()
     {
-        return $this->postRepository->listPost();
+        $posts = $this->postRepository->getListPosts();
+        return $posts;
     }
 
     public function addPost(Request $request)
     {
-        return $this->postRepository->addPost($request);
+        $post = $this->postRepository->addPost($request);
+        return $post;
     }
 
     public function detailPost($id)
     {
-        return $this->postRepository->detailPost($id);
+        $post = $this->postRepository->detailPost($id);
+        return $post;
     }
 
     public function updatePost(Request $request, $id)
     {
-        return $this->postRepository->updatePost($request, $id);
+        $post = $this->postRepository->updatePost($request, $id);
+        return $post;
     }
 
     public function removePost($id)
     {
-        return $this->postRepository->removePost($id);
+        $post = $this->postRepository->removePost($id);
+        return $post;
     }
 
-    public function userLike($id)
+    public function getUsersLike($id)
     {
-        return $this->postRepository->userLike($id);
+        $users = $this->postRepository->getUsersLike($id);
+        return $users;
     }
 
     public function userShare($id)
     {
-        return $this->postRepository->userShare($id);
+        $users = $this->postRepository->getUsersShare($id);
+        return $users;
     }
 }
