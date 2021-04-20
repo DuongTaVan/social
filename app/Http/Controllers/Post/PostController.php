@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers\Post;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\BaseController;
 use Illuminate\Http\Request;
+use App\Enums\Lang;
+use App\Http\Requests\PostRequest;
 use App\Repositories\Post\PostRepository;
+use App\Http\Resources\PostResource;
+use Symfony\Component\HttpFoundation\Response;
 
-class PostController extends Controller
+class PostController extends BaseController
 {
     public $postRepository;
 
@@ -21,39 +25,51 @@ class PostController extends Controller
         return $posts;
     }
 
-    public function addPost(Request $request)
+    public function getListFriendPosts($friendId)
     {
-        $post = $this->postRepository->addPost($request);
-        return $post;
+        $posts = $this->postRepository->getListFriendPosts($friendId);
+        return $posts;
+    }
+
+    public function addPost(PostRequest $request)
+    {
+        $this->postRepository->addPost($request);
+        return $this->responseSuccess(Lang::ADD_POST_SUCCESS, Response::HTTP_OK);
     }
 
     public function detailPost($id)
     {
         $post = $this->postRepository->detailPost($id);
-        return $post;
+        return new PostResource($post);
     }
 
-    public function updatePost(Request $request, $id)
+    public function updatePost(PostRequest $request, $id)
     {
-        $post = $this->postRepository->updatePost($request, $id);
-        return $post;
+        $this->postRepository->updatePost($request, $id);
+        return $this->responseSuccess(Lang::UPDATE_POST_SUCCESS, Response::HTTP_OK);
     }
 
     public function removePost($id)
     {
-        $post = $this->postRepository->removePost($id);
-        return $post;
+        $this->postRepository->removePost($id);
+        return $this->responseSuccess(Lang::REMOVE_POST_SUCCESS, Response::HTTP_OK);
     }
 
     public function getUsersLike($id)
     {
-        $users = $this->postRepository->getUsersLike($id);
-        return $users;
+        $post = $this->postRepository->getUsersLike($id);
+        return PostResource::collection($post);
     }
 
-    public function userShare($id)
+    public function getUsersShare($id)
     {
         $users = $this->postRepository->getUsersShare($id);
-        return $users;
+        return PostResource::collection($users);
+    }
+
+    public function sharePost($id, PostRequest $request)
+    {
+        $this->postRepository->sharePost($id, $request);
+        return $this->responseSuccess(Lang::ADD_POST_SUCCESS, Response::HTTP_OK);
     }
 }

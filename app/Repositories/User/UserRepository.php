@@ -78,7 +78,7 @@ class UserRepository extends BaseController implements IUserRepository
             $user = User::find($id_user);
             $listUserBlock[] = $user;
         }
-        return UserResource::collection($listUserBlock);
+        return $listUserBlock;
     }
 
     /**
@@ -96,7 +96,6 @@ class UserRepository extends BaseController implements IUserRepository
         $idUsers[] = (int)$blog;
         $user->block = json_encode($idUsers);
         $user->save();
-        return $this->responseSuccess(Lang::ADD_SUCCESS, Response::HTTP_OK);
     }
 
     /**
@@ -119,7 +118,6 @@ class UserRepository extends BaseController implements IUserRepository
         $idUsers = array_values($idUsers);
         $user->block = json_encode($idUsers);
         $user->save();
-        return $this->responseSuccess(Lang::REMOVE_SUCCESS, Response::HTTP_OK);
     }
 
     /**
@@ -134,7 +132,6 @@ class UserRepository extends BaseController implements IUserRepository
         $user->name = $name;
         $user->password = bcrypt($password);
         $user->save();
-        return $this->responseSuccess(Lang::CHANGE_INFOR_SUCCESS, Response::HTTP_OK);
     }
 
     /**
@@ -145,7 +142,9 @@ class UserRepository extends BaseController implements IUserRepository
     {
         $idUserBlocks = User::findOrFail(Auth::user()->id)->block;
         $idUserBlocks = json_decode($idUserBlocks);
-        $users = User::where('name', 'like', '%' . $request->name . '%')->whereNotIn('id', $idUserBlocks)->paginate(Constants::PAGINATE_SEARCH_USER);
-        return UserResource::collection($users);
+        $users = User::where('name', 'like', '%' . $request->q . '%')
+            ->orWhere('phone', $request->q)->orwhere('email', $request->q)
+            ->paginate(Constants::PAGINATE_SEARCH_USER);
+        return $users;
     }
 }

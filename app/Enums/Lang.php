@@ -25,4 +25,10 @@ class Lang
     const EDIT_POST_SUCCESS = "edit post success";
     const REMOVE_POST_SUCCESS = "remove post success";
     const UPDATE_POST_SUCCESS = "update post success";
+    const COMMENT_SUCCESS = "Comment success";
+    const UPDATE_COMMENT_SUCCESS = "update comment success";
+    const REMOVE_COMMENT_SUCCESS = "remove comment success";
+    const REMOVE_LIKE_SUCCESS = "remove like success";
+    const ADD_LIKE_SUCCESS = "add like success";
+    const POST_UPLOAD_ERR = "post upload error";
 }

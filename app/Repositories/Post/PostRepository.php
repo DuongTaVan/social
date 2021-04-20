@@ -2,14 +2,20 @@
 
 namespace App\Repositories\Post;
 
+use Faker\Provider\Image;
 use http\Env\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Post;
+use App\Models\File;
 use App\Http\Controllers\BaseController;
 use App\Http\Resources\PostResource;
 use App\Enums\Constants;
 use App\Enums\Lang;
+use Illuminate\Support\Str;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\Response;
 
 class PostRepository extends BaseController implements IPostRepository
@@ -20,12 +26,29 @@ class PostRepository extends BaseController implements IPostRepository
     public function getListPosts()
     {
         $id = Auth::user()->id;
-        $user = User::where('id', $id)->with(['post' => function ($query) {
-            $query->paginate(Constants::NUMBER_POST_PAGINATE);
-            $query->withCount('like');
-            $query->withCount('count_user');
-        }])->get();
+        $user = Post::where('created_by', $id)
+            ->withCount('count_user')
+            ->withCount('like')
+            ->withCount('comment')
+            ->with('file')
+            ->paginate(Constants::NUMBER_POST_PAGINATE);
+
         return PostResource::collection($user);
+    }
+
+    /**
+     * @return json $result
+     */
+    public function getListFriendPosts($friendId)
+    {
+        $posts = Post::where('created_by', $friendId)
+            ->withCount('count_user')
+            ->withCount('like')
+            ->withCount('comment')
+            ->with('file')
+            ->paginate(Constants::NUMBER_POST_PAGINATE);
+
+        return PostResource::collection($posts);
     }
 
     /**
@@ -33,10 +56,28 @@ class PostRepository extends BaseController implements IPostRepository
      */
     public function addPost($request)
     {
-        $data = $request->all();
-        $data["created_by"] = Auth::user()->id;
-        Post::create($data);
-        return $this->responseSuccess(Lang::ADD_POST_SUCCESS, Response::HTTP_OK);
+        DB::beginTransaction();
+        try {
+            $post = new Post;
+            $post->content = $request->content;
+            $post->created_by = Auth::user()->id;
+            $post->save();
+            if ($request->hasFile('files')) {
+                foreach ($request->file('files') as $file) {
+                    $name = "/images/" . time() . Str::random(Constants::RANDOM_NAME_FILE) . '.' . $file->getClientOriginalExtension();
+                    $path = public_path() . '/uploads/images/';
+                    Storage::disk('public')->put($name, file_get_contents($file->getRealPath()));
+                    $file = new File;
+                    $file->name = $name;
+                    $file->post_id = $post->id;
+                    $file->save();
+                }
+            }
+            \DB::commit();
+        } catch (Throwable $e) {
+            \DB::rollback();
+            return $this->responseError(Lang::POST_UPLOAD_ERR, Response::HTTP_NOT_FOUND);
+        }
     }
 
     /**
@@ -44,8 +85,8 @@ class PostRepository extends BaseController implements IPostRepository
      */
     public function detailPost($id)
     {
-        $post = Post::findOrFail($id);
-        return new PostResource($post);
+        $post = Post::where('id', $id)->with('file')->get();
+        return $post;
     }
 
     /**
@@ -55,9 +96,43 @@ class PostRepository extends BaseController implements IPostRepository
      */
     public function updatePost($request, $id)
     {
-        $post = Post::findOrFail($id);
-        $post->update($request->all());
-        return $this->responseSuccess(Lang::UPDATE_POST_SUCCESS, Response::HTTP_OK);
+        DB::beginTransaction();
+        try {
+            $post = Post::findOrFail($id);
+            $post->update($request->all());
+            if ($request->idImagesDelete) {
+                foreach ($request->idImagesDelete as $idImage) {
+                    $file = File::findOrFail('id', $idImage);
+                    if ($file->name) {
+                        $file_path = $file->name;
+                        unlink(storage_path('app/public/' . $file_path));
+                    }
+                    $file->delete();
+                }
+            }
+            if ($request->hasFile('files')) {
+                foreach ($request->file('files') as $file) {
+                    $ext = $file->getClientOriginalExtension();
+                    $extend = [
+                        'png', 'jpg', 'jpeg', 'PNG', 'JPG'
+                    ];
+                    if (!in_array($ext, $extend)) {
+                        return $this->responseError(Lang::FILE_UPLOAD_NOT_IMAGE, Response::HTTP_NOT_FOUND);
+                    }
+                    $name = "/images/" . time() . Str::random(Constants::RANDOM_NAME_FILE) . '.' . $file->getClientOriginalExtension();
+                    $path = public_path() . '/uploads/images/';
+                    Storage::disk('public')->put($name, file_get_contents($file->getRealPath()));
+                    $file = new File;
+                    $file->name = $name;
+                    $file->post_id = $post->id;
+                    $file->save();
+                }
+            }
+            \DB::commit();
+        } catch (Throwable $e) {
+            \DB::rollback();
+            return $this->responseError(Lang::POST_UPLOAD_ERR, Response::HTTP_NOT_FOUND);
+        }
     }
 
     /**
@@ -67,8 +142,17 @@ class PostRepository extends BaseController implements IPostRepository
     public function removePost($id)
     {
         $post = Post::findOrFail($id);
+        $files = File::where('post_id', $id)->get();
+        foreach ($files as $file) {
+
+            $removeFile = File::findOrFail($file->id);
+            if ($removeFile->name) {
+                $file_path = $removeFile->name;
+                unlink(storage_path('app/public/' . $file_path));
+            }
+            $removeFile->delete();
+        }
         $post->delete();
-        return $this->responseSuccess(Lang::REMOVE_POST_SUCCESS, Response::HTTP_OK);
     }
 
     /**
@@ -77,10 +161,10 @@ class PostRepository extends BaseController implements IPostRepository
      */
     public function getUsersLike($id)
     {
-        $post = Post::where('id', $id)->with(['like' => function ($query) {
+        $users = Post::where('id', $id)->with(['like' => function ($query) {
             $query->with('user');
         }])->get();
-        return PostResource::collection($post);
+        return $users;
     }
 
     /**
@@ -89,9 +173,23 @@ class PostRepository extends BaseController implements IPostRepository
      */
     public function getUsersShare($id)
     {
-        $post = Post::where('id', $id)->with(['count_user' => function ($query) {
+        $users = Post::where('id', $id)->with(['count_user' => function ($query) {
             $query->with('user');
         }])->get();
-        return PostResource::collection($post);
+        return $users;
+
+    }
+
+    /**
+     * @param int $id //id post
+     * @return json $result
+     */
+    public function sharePost($id, $request)
+    {
+        $data = $request->all();
+        $data['share_post_id'] = $id;
+        $data['created_by'] = Auth::user()->id;
+        Post::create($data);
+
     }
 }
