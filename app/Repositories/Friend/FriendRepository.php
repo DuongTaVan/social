@@ -27,7 +27,7 @@ class FriendRepository extends BaseController implements IFriendRepository
             $query->where('status', Constants::STATUS_FRIEND);
         }])->get();
 
-        return FriendResource::collection($friends);
+        return $friends;
     }
 
     /**
@@ -38,7 +38,7 @@ class FriendRepository extends BaseController implements IFriendRepository
         $listUserRequests = User::where('id', Auth::user()->id)->with('userTo', function ($query) {
             $query->where('status', Constants::STATUS_REQUEST_FRIEND);
         })->get();
-        return FriendResource::collection($listUserRequests);
+        return $listUserRequests;
     }
 
     /**
@@ -60,7 +60,6 @@ class FriendRepository extends BaseController implements IFriendRepository
         $friend->from_id = Auth::user()->id;
         $friend->to_id = $id;
         $friend->save();
-        return $this->responseSuccess(Lang::SEND_REQUEST_FRIEND_SUCCESS, Response::HTTP_OK);
     }
 
     /**
@@ -71,7 +70,6 @@ class FriendRepository extends BaseController implements IFriendRepository
     {
         $checkExistFriend = $this->checkExistFriend($id, Constants::STATUS_FRIEND);
         $checkExistFriend->delete();
-        return $this->responseSuccess(Lang::REMOVE_FRIEND_SUCCESS, Response::HTTP_OK);
     }
 
     /**
@@ -83,8 +81,6 @@ class FriendRepository extends BaseController implements IFriendRepository
         $checkExistFriend = $this->checkExistFriend($id, Constants::STATUS_REQUEST_FRIEND);
         $checkExistFriend->status = Constants::STATUS_FRIEND;
         $checkExistFriend->save();
-        return $this->responseSuccess(Lang::ADD_FRIEND_SUCCESS, Response::HTTP_OK);
-
     }
 
     /**
@@ -95,7 +91,6 @@ class FriendRepository extends BaseController implements IFriendRepository
     {
         $checkExistFriend = $this->checkExistFriend($id, Constants::STATUS_REQUEST_FRIEND);
         $checkExistFriend->delete();
-        return $this->responseSuccess(Lang::REMOVE_REQUEST_FRIEND_SUCCESS, Response::HTTP_OK);
     }
 
     /**

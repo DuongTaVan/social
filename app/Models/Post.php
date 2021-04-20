@@ -30,4 +30,14 @@ class Post extends Model
     {
         return $this->hasMany('App\Models\Post', 'share_post_id');
     }
+
+    public function comment()
+    {
+        return $this->hasMany('App\Models\Comment', 'post_id', 'id');
+    }
+
+    public function file()
+    {
+        return $this->hasMany('App\Models\File', 'post_id', 'id');
+    }
 }

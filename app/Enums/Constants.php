@@ -10,4 +10,5 @@ class Constants
     const STATUS_FRIEND = 1;
     const STATUS_REQUEST_FRIEND = 0;
     const PAGINATE_SEARCH_USER = 8;
+    const RANDOM_NAME_FILE = 5;
 }

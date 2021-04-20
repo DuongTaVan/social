@@ -4,9 +4,12 @@ namespace App\Http\Controllers\Friend;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Enums\Lang;
+use App\Http\Resources\FriendResource;
 use App\Repositories\Friend\FriendRepository;
+use Symfony\Component\HttpFoundation\Response;
 
-class FriendController extends Controller
+class FriendController extends BaseController
 {
     public $friendRepository;
 
@@ -18,36 +21,36 @@ class FriendController extends Controller
     public function getListFriends()
     {
         $users = $this->friendRepository->getListFriends();
-        return $users;
+        return FriendResource::collection($users);
     }
 
     public function requestFriend()
     {
-        $user = $this->friendRepository->requestFriend();
-        return $user;
+        $users = $this->friendRepository->requestFriend();
+        return FriendResource::collection($users);
     }
 
     public function sendRequestFriend(Request $request, $id)
     {
-        $user = $this->friendRepository->sendRequestFriend($request, $id);
-        return $user;
+        $this->friendRepository->sendRequestFriend($request, $id);
+        return $this->responseSuccess(Lang::SEND_REQUEST_FRIEND_SUCCESS, Response::HTTP_OK);
     }
 
     public function removeFriend($id)
     {
-        $user = $this->friendRepository->removeFriend($id);
-        return $user;
+        $this->friendRepository->removeFriend($id);
+        return $this->responseSuccess(Lang::REMOVE_FRIEND_SUCCESS, Response::HTTP_OK);
     }
 
     public function acceptFriend($id)
     {
-        $user = $this->friendRepository->acceptFriend($id)
-        return $user;
+        $this->friendRepository->acceptFriend($id)
+        return $this->responseSuccess(Lang::ADD_FRIEND_SUCCESS, Response::HTTP_OK);
     }
 
     public function removeRequestFriend($id)
     {
-        $user = $this->friendRepository->removeRequestFriend($id);
-        return $user;
+        $this->friendRepository->removeRequestFriend($id);
+        return $this->responseSuccess(Lang::REMOVE_REQUEST_FRIEND_SUCCESS, Response::HTTP_OK);
     }
 }

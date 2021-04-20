@@ -16,4 +16,6 @@ interface IPostRepository
     public function getUsersLike($id);
 
     public function getUsersShare($id);
+
+    public function sharePost($id, $request);
 }
