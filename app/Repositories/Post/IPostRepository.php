@@ -3,19 +3,21 @@
 namespace App\Repositories\Post;
 interface IPostRepository
 {
-    public function getListPosts();
+    public function getPosts();
 
-    public function addPost($request);
+    public function add($request);
 
-    public function detailPost($id);
+    public function detail($id);
 
-    public function updatePost($request, $id);
+    public function update($request, $id);
 
-    public function removePost($id);
+    public function remove($id);
 
     public function getUsersLike($id);
 
     public function getUsersShare($id);
 
-    public function sharePost($id, $request);
+    public function share($id, $request);
+
+    public function getPostsHome();
 }

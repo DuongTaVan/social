@@ -10,6 +10,7 @@ use App\Http\Controllers\BaseController;
 use App\Http\Resources\CommentResource;
 use App\Enums\Constants;
 use App\Enums\Lang;
+use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response;
 
 class CommentRepository extends BaseController implements ICommentRepository
@@ -19,7 +20,7 @@ class CommentRepository extends BaseController implements ICommentRepository
      * @param int|string $request //data
      * @return json $result
      */
-    public function addComment($request, $id)
+    public function add($request, $id)
     {
         $data = $request->all();
         $data['post_id'] = $id;
@@ -31,7 +32,7 @@ class CommentRepository extends BaseController implements ICommentRepository
      * @param int $id //id post
      * @return json $result
      */
-    public function detailComment($id)
+    public function detail($id)
     {
         $comment = Comment::findOrFail($id);
         return $comment;
@@ -42,7 +43,7 @@ class CommentRepository extends BaseController implements ICommentRepository
      * @param int|string $request //data
      * @return json $result
      */
-    public function updateComment($request, $id)
+    public function update($request, $id)
     {
         $comment = Comment::findOrFail($id);
         $comment->content = $request->content;
@@ -53,21 +54,36 @@ class CommentRepository extends BaseController implements ICommentRepository
      * @param int $id //id post
      * @return json $result
      */
-    public function removeComment($id)
+    public function remove($id)
     {
-        $comment = Comment::findOrFail($id);
-        $comment->delete();
+        DB::beginTransaction();
+        try {
+            $comment = Comment::findOrFail($id);
+            $subComments = Comment::where('comment_id', $id)->get();
+            if (count($subComments) > 0) {
+                foreach ($subComments as $subComment) {
+                    Comment::findOrFail($subComment->id)->delete();
+                }
+            }
+            $comment->delete();
+            \DB::commit();
+        } catch (Throwable $e) {
+            \DB::rollback();
+            return $this->responseError(Lang::REMOVE_COMMENT_ERR, Response::HTTP_NOT_FOUND);
+        }
     }
 
     /**
-     * @param int $id //id post
+     * @param int $id id post
      * @return json $result
      */
-    public function getListComment($id)
-    {
-        $post = Comment::where('post_id', $id)->where('comment_id', NULL)->with('repComment')->get();
 
-        return $post;
+    public function getComments($id)
+    {
+        $posts = Comment::where('post_id', $id)->where('comment_id', NULL)->with('user')->with(['repComment' => function ($q) {
+            $q->with('user')->withCount('likeComment');
+        }])->withCount('likeComment', 'repComment')->get();
+        return $posts;
     }
 
 }

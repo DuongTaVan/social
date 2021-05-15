@@ -19,21 +19,20 @@ class FriendRepository extends BaseController implements IFriendRepository
     /**
      * @return json $result
      */
-    public function getListFriends()
+    public function getFriends()
     {
         $friends = User::where('id', Auth::user()->id)->with(['userTo' => function ($query) {
-            $query->where('status', Constants::STATUS_FRIEND);
+            $query->where('status', Constants::STATUS_FRIEND)->with('userFrom');
         }, 'userFrom' => function ($query) {
-            $query->where('status', Constants::STATUS_FRIEND);
+            $query->where('status', Constants::STATUS_FRIEND)->with('userTo');
         }])->get();
-
         return $friends;
     }
 
     /**
      * @return json $result
      */
-    public function requestFriend()
+    public function request()
     {
         $listUserRequests = User::where('id', Auth::user()->id)->with('userTo', function ($query) {
             $query->where('status', Constants::STATUS_REQUEST_FRIEND);
@@ -46,19 +45,48 @@ class FriendRepository extends BaseController implements IFriendRepository
      * @param int|string $request //data
      * @return json $result
      */
-    public function sendRequestFriend($request, $id)
+    public function sendRequest($id)
     {
         $idUser = Auth::user()->id;
-        $checkRequestFriend = Friend::where('from_id', $idUser)->where('to_id', $id)->orWhere(function ($query) use ($id, $idUser) {
+        $user = User::find($idUser);
+        $idUsersBlock = json_decode($user->block); //list id block of user
+        //check user exist in array user blocks
+        if (is_array($idUsersBlock) && in_array((int)$id, $idUsersBlock)) {
+            return $this->responseError(Lang::USER_WAS_BLOCK, Response::HTTP_NOT_FOUND);
+        }
+        $requestFriendPending = Friend::where('from_id', $idUser)->where('to_id', $id)->orWhere(function ($query) use ($id, $idUser) {
             $query->where('from_id', $id)
                 ->where('to_id', $idUser);
         })->get();
-        if (count($checkRequestFriend) != 0) {
+        //check user exist in array request friend pending
+        if (count($requestFriendPending) != 0) {
             return $this->responseError(Lang::SENT_FRIEND_REQUEST, Response::HTTP_NOT_FOUND);
         }
         $friend = new Friend;
         $friend->from_id = Auth::user()->id;
         $friend->to_id = $id;
+        $friend->save();
+        return $this->responseSuccess(Lang::SEND_REQUEST_FRIEND_SUCCESS, Response::HTTP_OK);
+    }
+
+    /**
+     * @param int $id //id user friend
+     * @return json $result
+     */
+    public function remove($id)
+    {
+        $friend = $this->isExistFriend($id, Constants::STATUS_FRIEND);
+        $friend->delete();
+    }
+
+    /**
+     * @param int $id //id user friend
+     * @return json $result
+     */
+    public function accept($id)
+    {
+        $friend = $this->isExistFriend($id, Constants::STATUS_REQUEST_FRIEND);
+        $friend->status = Constants::STATUS_FRIEND;
         $friend->save();
     }
 
@@ -66,31 +94,10 @@ class FriendRepository extends BaseController implements IFriendRepository
      * @param int $id //id user friend
      * @return json $result
      */
-    public function removeFriend($id)
+    public function removeRequest($id)
     {
-        $checkExistFriend = $this->checkExistFriend($id, Constants::STATUS_FRIEND);
-        $checkExistFriend->delete();
-    }
-
-    /**
-     * @param int $id //id user friend
-     * @return json $result
-     */
-    public function acceptFriend($id)
-    {
-        $checkExistFriend = $this->checkExistFriend($id, Constants::STATUS_REQUEST_FRIEND);
-        $checkExistFriend->status = Constants::STATUS_FRIEND;
-        $checkExistFriend->save();
-    }
-
-    /**
-     * @param int $id //id user friend
-     * @return json $result
-     */
-    public function removeRequestFriend($id)
-    {
-        $checkExistFriend = $this->checkExistFriend($id, Constants::STATUS_REQUEST_FRIEND);
-        $checkExistFriend->delete();
+        $friend = $this->isExistFriend($id, Constants::STATUS_REQUEST_FRIEND);
+        $friend->delete();
     }
 
     /**
@@ -98,15 +105,14 @@ class FriendRepository extends BaseController implements IFriendRepository
      * @param int $status //status relationship friend
      * @return json $result
      */
-    public function checkExistFriend($id, $status)
+    public function isExistFriend($id, $status)
     {
-
         $idUser = Auth::user()->id;
-        $checkExistFriend = Friend::where('from_id', $idUser)->where('to_id', $id)->where('status', $status)->orWhere(function ($query) use ($id, $idUser, $status) {
+        $friend = Friend::where('from_id', $idUser)->where('to_id', $id)->where('status', $status)->orWhere(function ($query) use ($id, $idUser, $status) {
             $query->where('from_id', $id)
                 ->where('to_id', $idUser)
                 ->where('status', $status);
         })->firstOrFail();
-        return $checkExistFriend;
+        return $friend;
     }
 }

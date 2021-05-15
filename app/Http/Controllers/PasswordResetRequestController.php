@@ -95,11 +95,10 @@ class PasswordResetRequestController extends BaseController
     {
         $isExistToken = $this->userRepository->isExistToken('token_reset_password', $token, Carbon::now()->subMinute(Constants::TIME_RESET_PASSWORD));
         if (!$isExistToken) {
-            return $this->responseError(Lang::CHECK_PASSWORD_OVER_TIME, Response::HTTP_NOT_FOUND);
+            return $this->responseError(Lang::CHECK_PASSWORD_OVER_TIME, Response::HTTP_OK);
         }
         $data = $isExistToken->email;
         return $this->responseSuccess($data, Response::HTTP_OK);
-
     }
 
     /**

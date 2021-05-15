@@ -23,29 +23,59 @@ class PostRepository extends BaseController implements IPostRepository
     /**
      * @return json $result
      */
-    public function getListPosts()
+    public function getPostsHome()
     {
         $id = Auth::user()->id;
-        $user = Post::where('created_by', $id)
+        $posts = Post::whereHas('user', function ($q) use ($id) {
+            $q->where('id', $id)->orWhereHas('userTo', function ($q) use ($id) {
+                $q->where('from_id', $id);
+            })->orWhereHas('userFrom', function ($q) use ($id) {
+                $q->where('status', 1);
+                $q->where('to_id', $id);
+            });
+        })
+            ->with('user')
             ->withCount('count_user')
             ->withCount('like')
             ->withCount('comment')
             ->with('file')
-            ->paginate(Constants::NUMBER_POST_PAGINATE);
-
-        return PostResource::collection($user);
+            ->with(['sharePost' => function ($query) {
+                $query->with('user');
+            }])
+            ->orderByDesc('created_at')->paginate(Constants::NUMBER_POST_PAGINATE);
+        return $posts;
     }
 
     /**
      * @return json $result
      */
-    public function getListFriendPosts($friendId)
+    public function getPosts()
+    {
+        $id = Auth::user()->id;
+        $posts = Post::where('created_by', $id)
+            ->withCount('count_user')
+            ->withCount('like')
+            ->withCount('comment')
+            ->with('file')
+            ->with(['sharePost' => function ($query) {
+                $query->with('user');
+            }])
+            ->orderByDesc('id')
+            ->paginate(Constants::NUMBER_POST_PAGINATE);
+        return PostResource::collection($posts);
+    }
+
+    /**
+     * @return json $result
+     */
+    public function getFriendPosts($friendId)
     {
         $posts = Post::where('created_by', $friendId)
             ->withCount('count_user')
             ->withCount('like')
             ->withCount('comment')
-            ->with('file')
+            ->with('file', 'sharePost')
+            ->orderByDesc('id')
             ->paginate(Constants::NUMBER_POST_PAGINATE);
 
         return PostResource::collection($posts);
@@ -54,7 +84,7 @@ class PostRepository extends BaseController implements IPostRepository
     /**
      * @param int|string $request //data
      */
-    public function addPost($request)
+    public function add($request)
     {
         DB::beginTransaction();
         try {
@@ -75,6 +105,7 @@ class PostRepository extends BaseController implements IPostRepository
             }
             \DB::commit();
         } catch (Throwable $e) {
+
             \DB::rollback();
             return $this->responseError(Lang::POST_UPLOAD_ERR, Response::HTTP_NOT_FOUND);
         }
@@ -83,9 +114,9 @@ class PostRepository extends BaseController implements IPostRepository
     /**
      * @param int $id //id user friend
      */
-    public function detailPost($id)
+    public function detail($id)
     {
-        $post = Post::where('id', $id)->with('file')->get();
+        $post = Post::where('id', $id)->with('file', 'user')->firstOrFail();
         return $post;
     }
 
@@ -94,7 +125,7 @@ class PostRepository extends BaseController implements IPostRepository
      * @param int|string $request //data
      * @return json $result
      */
-    public function updatePost($request, $id)
+    public function update($request, $id)
     {
         DB::beginTransaction();
         try {
@@ -139,20 +170,27 @@ class PostRepository extends BaseController implements IPostRepository
      * @param int $id //id post
      * @return json $result
      */
-    public function removePost($id)
+    public function remove($id)
     {
-        $post = Post::findOrFail($id);
-        $files = File::where('post_id', $id)->get();
-        foreach ($files as $file) {
+        DB::beginTransaction();
+        try {
+            $post = Post::findOrFail($id);
+            $files = File::where('post_id', $id)->get();
+            foreach ($files as $file) {
 
-            $removeFile = File::findOrFail($file->id);
-            if ($removeFile->name) {
-                $file_path = $removeFile->name;
-                unlink(storage_path('app/public/' . $file_path));
+                $removeFile = File::findOrFail($file->id);
+                if ($removeFile->name) {
+                    $file_path = $removeFile->name;
+                    unlink(storage_path('app/public/' . $file_path));
+                }
+                $removeFile->delete();
             }
-            $removeFile->delete();
+            $post->delete();
+            \DB::commit();
+        } catch (Throwable $e) {
+            \DB::rollback();
+            return $this->responseError(Lang::POST_REMOVE_ERR, Response::HTTP_NOT_FOUND);
         }
-        $post->delete();
     }
 
     /**
@@ -184,12 +222,11 @@ class PostRepository extends BaseController implements IPostRepository
      * @param int $id //id post
      * @return json $result
      */
-    public function sharePost($id, $request)
+    public function share($id, $request)
     {
         $data = $request->all();
         $data['share_post_id'] = $id;
         $data['created_by'] = Auth::user()->id;
         Post::create($data);
-
     }
 }

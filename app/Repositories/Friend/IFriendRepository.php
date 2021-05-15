@@ -4,15 +4,15 @@ namespace App\Repositories\Friend;
 
 interface IFriendRepository
 {
-    public function getListFriends();
+    public function getFriends();
 
-    public function requestFriend();
+    public function request();
 
-    public function sendRequestFriend($request, $id);
+    public function sendRequest($id);
 
-    public function removeFriend($id);
+    public function remove($id);
 
-    public function acceptFriend($id);
+    public function accept($id);
 
-    public function removeRequestFriend($id);
+    public function removeRequest($id);
 }

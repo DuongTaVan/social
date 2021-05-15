@@ -17,21 +17,40 @@ use Symfony\Component\HttpFoundation\Response;
 class LikeRepository extends BaseController implements ILikeRepository
 {
     /**
+     * @return json $result
+     */
+    public function getLikes(){
+        $likes = Like::where('user_id', Auth::user()->id)->get();
+        return $likes;
+    }
+    /**
+     * @return json $result
+     */
+    public function getLikesComment(){
+        $likes = Cm_like::where('user_id', Auth::user()->id)->get();
+        return $likes;
+    }
+    /**
      * @param int $id //id post
      * @return json $result
      */
-    public function addLike($id)
+    public function add($id)
     {
-        $data['post_id'] = $id;
         $data['user_id'] = Auth::user()->id;
-        Like::create($data);
+        $isLike = Like::where('user_id', $data['user_id'])->where('post_id', $id)->first();
+        if ($isLike) {
+            $isLike->delete();
+        } else {
+            $data['post_id'] = $id;
+            Like::create($data);
+        }
     }
 
     /**
      * @param int $id //id user like
      * @return json $result
      */
-    public function removeLike($id)
+    public function remove($id)
     {
         $user = Like::findOrFail($id);
         $user->delete();
@@ -43,9 +62,14 @@ class LikeRepository extends BaseController implements ILikeRepository
      */
     public function addLikeComment($id)
     {
-        $data['comment_id'] = $id;
         $data['user_id'] = Auth::user()->id;
-        Cm_like::create($data);
+        $isLike = Cm_like::where('user_id', $data['user_id'])->where('comment_id', $id)->first();
+        if ($isLike) {
+            $isLike->delete();
+        } else {
+            $data['comment_id'] = $id;
+            Cm_like::create($data);
+        }
     }
 
     /**
