@@ -14,6 +14,7 @@ import {
 import {listFriend, removeSend, acceptFriend} from "./../friend";
 import {listComment, addComment, removeComment} from "./../comment";
 import {addLike, listLike, addLikeComment, listLikeComment} from "./../like";
+import {addMessage, getMessages} from "./../message";
 import {
   addUserBlock,
   SearchUser,
@@ -33,6 +34,8 @@ const state = {
   loading: false,
   loginResponse: '',
   name: '',
+  id: '',
+  idFriend: '',
   email: '',
   phone: '',
   avatar: '',
@@ -40,6 +43,7 @@ const state = {
   emailFriend: '',
   avatarFriend: '',
   message: '',
+  messages: [],
   detailPost: [],
   listData: [],
   follower: [],
@@ -61,10 +65,12 @@ const getters = {
   listFriends: state => state.listFriends,
   getNameUser: state => state.name,
   getAvatar: state => state.avatar,
+  getId: state => state.id,
   getEmailUser: state => state.email,
   getPhoneUser: state => state.phone,
   getNameFriend: state => state.nameFriend,
   getEmailFriend: state => state.emailFriend,
+  getIdFriend: state => state.idFriend,
   getAvatarFriend: state => state.avatarFriend,
   listComments: state => state.listComments,
   listLikes: state => state.listLikes,
@@ -73,6 +79,7 @@ const getters = {
   detailPosts: state => state.detailPost,
   follower: state => state.follower,
   getMessage: state => state.message,
+  getMessagesFriend: state => state.messages,
   checkToken: state => state.checkToken,
   getBlock: state => state.blocks,
 };
@@ -92,8 +99,14 @@ const mutations = {
   setName(state, name) {
     state.name = name;
   },
+  setId(state, id) {
+    state.id = id;
+  },
   setPhone(state, phone) {
     state.phone = phone;
+  },
+  setMessages(state, data) {
+    state.messages = data;
   },
   setAvatar(state, url) {
     state.avatar = url;
@@ -112,6 +125,9 @@ const mutations = {
   },
   setMailFriend(state, email) {
     state.emailFriend = email;
+  },
+  setIdFriend(state, id) {
+    state.idFriend = id;
   },
   setAvatarFriend(state, url) {
     state.avatarFriend = url;
@@ -175,12 +191,12 @@ const actions = {
   /* eslint-disable no-unused-vars */
   async userProfile({commit}) {
     const response = await userProfile();
-    console.log(response)
     if (response.status == 200) {
       commit("setAuth", true);
       commit("setName", response.data.name);
       commit("setEmail", response.data.email);
       commit("setPhone", response.data.phone);
+      commit("setId", response.data.id);
       commit("setAvatar", response.data.urlAvatar);
     } else {
       commit("setAuth", false);
@@ -193,7 +209,6 @@ const actions = {
   },
   async listPost({commit}) {
     const response = await listPost();
-    console.log(response)
     commit('getData', response.data);
   },
   async listPostFriend({commit}, id) {
@@ -263,6 +278,7 @@ const actions = {
     commit('setNameFriend', response.data.data.name);
     commit('setMailFriend', response.data.data.email);
     commit('setAvatarFriend', response.data.data.urlAvatar);
+    commit('setIdFriend', response.data.data.id);
   },
   /* eslint-disable no-unused-vars */
   async detailPost({commit}, id) {
@@ -337,6 +353,15 @@ const actions = {
   /* eslint-disable no-unused-vars */
   async removeBlock({commit}, id) {
     const response = await removeBlock(id);
+  },
+  /* eslint-disable no-unused-vars */
+  async addMessage({commit}, data) {
+    const response = await addMessage(data);
+  },
+  /* eslint-disable no-unused-vars */
+  async getMessages({commit}, id) {
+    const response = await getMessages(id);
+    commit('setMessages', response.data.data);
   }
 }
 export default {

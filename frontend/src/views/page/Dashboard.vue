@@ -330,7 +330,7 @@ export default {
   },
   methods: {
     ...mapActions(["addPost", "listPost", "listFriend", "listComment", "addComment", "listLike", "addLike",
-      "addUserBlock", "userProfile", "detailPost", "addsharePost", "pagePaginate", "removePost", "updatePost", "currentPage", "addLikeComment", "listLikeComment", "removeComment"]),
+      "addUserBlock", "detailPost", "addsharePost", "pagePaginate", "removePost", "updatePost", "currentPage", "addLikeComment", "listLikeComment", "removeComment"]),
     async addPostStatus() {
       const post = {
         content: this.post

@@ -172,10 +172,10 @@ class UserRepository extends BaseController implements IUserRepository
         $user->name = $request->name;
         $user->phone = $request->phone;
         $user->password = bcrypt($request->newPassword);
-//        if ($user->avatar) {
-//            $file_path = $user->avatar;
-//            unlink(storage_path('app/public/' . $file_path));
-//        }
+        if ($user->avatar != null) {
+            $file_path = $user->avatar;
+            unlink(storage_path('app/public/' . $file_path));
+        }
         if ($request->hasFile('avatar')) {
             $file = $request->avatar;
             //check extension image

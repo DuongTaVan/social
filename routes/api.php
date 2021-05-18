@@ -99,6 +99,14 @@ Route::group([
     Route::get('/get-like-comment', 'Like\LikeController@getLikesComment');
     Route::post('/remove-like-comment/{id}', 'Like\LikeController@removeLikeComment');
 });
+
+Route::group([
+    'middleware' => ['jwt.verify', 'cors'],
+    'prefix' => 'chat'
+], function ($router) {
+    Route::get('/get-message/{id}', 'Chat\ChatController@getMessages');
+    Route::post('/add-message', 'Chat\ChatController@add');
+});
 Route::get("/docs", function () {
     return view("Api.api");
 });

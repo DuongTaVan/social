@@ -61,8 +61,9 @@ class User extends Authenticatable implements JWTSubject
 
     public function getUrlAvatarAttribute($key)
     {
-        return config('app.url').'/storage'.$this->avatar;
+        return config('app.url') . '/storage' . $this->avatar;
     }
+
     /**
      * Return a key value array, containing any custom claims to be added to the JWT.
      *
@@ -72,19 +73,43 @@ class User extends Authenticatable implements JWTSubject
     {
         return [];
     }
-    public function post(){
-        return $this->hasMany('App\Models\Post','created_by', 'id');
+
+    public function post()
+    {
+        return $this->hasMany('App\Models\Post', 'created_by', 'id');
     }
 
-    public function userFrom(){
+    public function userFrom()
+    {
         return $this->hasMany('App\Models\Friend', 'from_id', 'id');
     }
 
-    public function userTo(){
+    public function userTo()
+    {
         return $this->hasMany('App\Models\Friend', 'to_id', 'id');
     }
 
-    public function getUsersAttribute() {
+    /**
+     * A user can have many messages
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function messageTo()
+    {
+        return $this->hasMany('App\Models\Message', 'to_id', 'id');
+    }
+    /**
+     * A user can have many messages
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function messageFrom()
+    {
+        return $this->hasMany('App\Models\Message', 'from_id', 'id');
+    }
+
+    public function getUsersAttribute()
+    {
         return $this->userFrom->merge($this->userTo);
     }
 }

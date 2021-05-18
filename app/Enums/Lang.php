@@ -36,4 +36,6 @@ class Lang
     const POST_REMOVE_ERR = "post remove error";
     const ADD_USER_BLOCK_ERR = "add user block err";
     const LIST_USER_BLOCK = "do not user block";
+    const ADD_MESSAGE_SUCCESS = "add message success";
+    const SEND_MESSAGE_ERR = "send message error";
 }

@@ -33,9 +33,6 @@ export default {
   mounted: function () {
     window.addEventListener('scroll', this.scrollListener)
   },
-  // beforeDestroy: function () {
-  //     window.removeEventListener('scroll', this.scrollListener)
-  // }
 };
 
 </script>
