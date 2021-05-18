@@ -43,7 +43,6 @@ export async function getListFollowing() {
 }
 
 export async function changeInfo(data) {
-  console.log(data)
   const response = await axios.post("/user/change-information", data)
     .then(res => res)
     .catch(err => err);

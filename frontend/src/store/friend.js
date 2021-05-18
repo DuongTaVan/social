@@ -20,3 +20,15 @@ export async function acceptFriend(id) {
     .catch(err => err);
   return response;
 }
+export async function searchFriendsChat(name) {
+  const response = await axios.get("/friend/search-friend-chat/" + name)
+    .then(res => res)
+    .catch(err => err);
+  return response;
+}
+export async function getFriendsChat() {
+  const response = await axios.get("/friend/list-friend-chat")
+    .then(res => res)
+    .catch(err => err);
+  return response;
+}

@@ -80,7 +80,6 @@
                                    @click="sharePost(item.id)">Share</i>
                       {{ item.count_user_count }}</p>
                   </div>
-                  <hr>
                 </div>
                 <div class="user-comment" :class="{displayUserComment: commentActive === item.id}">
                   <div class="if-user-comment" v-for="comment in comments" :key="comment.id">
@@ -189,40 +188,24 @@
             <div class="card profile">
               <div class="card-body" v-for="friend in friends" :key="friend.id">
                 <div class="list-friend">
-                  <span v-if="friend.user_to">
-                    <img src="https://img.icons8.com/cotton/2x/user-male.png" alt="" v-if="friend.user_to.avatar == null">
+                  <span>
+                    <img src="https://img.icons8.com/cotton/2x/user-male.png" alt="" v-if="friend.avatar == null">
                     <img style="width: 40px"
-                         :src="friend.user_to.urlAvatar"
+                         :src="friend.urlAvatar"
                          alt="" v-else>
                   </span>
-                  <span v-else>
-                    <img src="https://img.icons8.com/cotton/2x/user-male.png" alt="" v-if="friend.user_from.avatar == null">
-                    <img style="width: 40px"
-                         :src="friend.user_from.urlAvatar"
-                         alt="" v-else>
-                  </span>
-                  <div class="friend-if" v-if="friend.user_to">
-                    <h5>{{ friend.user_to.name }}</h5>
-                    <p>{{ friend.user_to.email }}</p>
-                  </div>
-                  <div class="friend-if" v-else>
-                    <h5>{{ friend.user_from.name }}</h5>
-                    <p>{{ friend.user_from.email }}</p>
+                  <div class="friend-if">
+                    <h5>{{ friend.name }}</h5>
+                    <p>{{ friend.email }}</p>
                   </div>
                 </div>
                 <div class="op-friend">
-                  <router-link tag="a" class="view-more-friend" :to="/page/+friend.user_to.id"
-                               @click="postFriend(friend.user_to.id)" v-if="friend.user_to">view more
+                  <router-link tag="a" class="view-more-friend" :to="/page/+friend.id"
+                               @click="postFriend(friend.id)">view more
                   </router-link>
-                  <router-link tag="a" class="view-more-friend" :to="/page/+friend.user_from.id"
-                               @click="postFriend(friend.user_from.id)" v-else>view more
-                  </router-link>
-                  <div class="friend-if" v-if="friend.user_to">
+                  <div class="friend-if">
                     <a class="view-more-friend" href="#"
-                       @click="addBlock(friend.user_to.id)">block</a>
-                  </div>
-                  <div class="friend-if" v-else>
-                    <a class="view-more-friend" href="#" @click="addBlock(friend.user_from.id)">block</a>
+                       @click="addBlock(friend.id)">block</a>
                   </div>
                 </div>
               </div>
@@ -330,7 +313,7 @@ export default {
   },
   methods: {
     ...mapActions(["addPost", "listPost", "listFriend", "listComment", "addComment", "listLike", "addLike",
-      "addUserBlock", "userProfile", "detailPost", "addsharePost", "pagePaginate", "removePost", "updatePost", "currentPage", "addLikeComment", "listLikeComment", "removeComment"]),
+      "addUserBlock", "detailPost", "addsharePost", "pagePaginate", "removePost", "updatePost", "currentPage", "addLikeComment", "listLikeComment", "removeComment"]),
     async addPostStatus() {
       const post = {
         content: this.post

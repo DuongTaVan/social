@@ -13,7 +13,6 @@
               </p>
               <p class="sea-email">{{ user.email }}</p>
             </div>
-            <div>{{ user.user_to.status }}</div>
             <a class="add-friend" href="#" @click="add(user.id)"
                v-if="user.user_from[0] === undefined && user.user_to[0] === undefined">Add</a>
             <a class="add-friend" href="#" @click="accept(user.id)"
@@ -56,7 +55,7 @@ export default {
   methods: {
     ...mapActions(['addFriend', 'SearchUsers', 'removeSend', 'acceptFriend']),
     setData() {
-      this.users = this.listUserSearch
+      this.users = this.listUserSearch;
     },
     async add(id) {
       await this.addFriend(id);

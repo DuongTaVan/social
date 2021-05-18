@@ -74,7 +74,6 @@ export default {
       for (let key in data) {
         formData.append(key, data[key]);
       }
-      console.log(formData)
       await this.changeInfo(formData);
       if (this.getMessage) {
         alert(this.getMessage);

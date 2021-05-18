@@ -74,7 +74,9 @@ class PostRepository extends BaseController implements IPostRepository
             ->withCount('count_user')
             ->withCount('like')
             ->withCount('comment')
-            ->with('file', 'sharePost')
+            ->with('file')->with(['sharePost' => function ($query) {
+                $query->with('user');
+            }])
             ->orderByDesc('id')
             ->paginate(Constants::NUMBER_POST_PAGINATE);
 

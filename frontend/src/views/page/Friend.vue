@@ -6,28 +6,17 @@
         <div class="card">
           <h4>{{ users.length }} friend</h4>
           <div class="list-search" v-for="user in users" :key="user.id">
-            <span v-if="user.user_to">
+            <span>
               <img src="https://img.icons8.com/cotton/2x/user-male.png" alt=""
-                   v-if="user.user_to.avatar == null">
-              <img :src="user.user_to.urlAvatar" alt="" v-else>
-            </span>
-            <span v-else>
-               <img src="https://img.icons8.com/cotton/2x/user-male.png" alt=""
-                    v-if="user.user_from.avatar == null">
-               <img :src="user.user_from.urlAvatar" alt="" v-else>
+                   v-if="user.avatar == null">
+              <img :src="user.urlAvatar" alt="" v-else>
             </span>
 
-            <div class="name-email" v-if="user.user_to">
+            <div class="name-email">
               <p>
-                <router-link :to="/page/+ user.user_to.id" tag="a">{{ user.user_to.name }}</router-link>
+                <router-link :to="/page/+ user.id" tag="a">{{ user.name }}</router-link>
               </p>
-              <p class="sea-email">{{ user.user_to.email }}</p>
-            </div>
-            <div class="name-email" v-else>
-              <p>
-                <router-link :to="/page/+ user.user_from.id" tag="a">{{ user.user_from.name }}</router-link>
-              </p>
-              <p class="sea-email">{{ user.user_from.email }}</p>
+              <p class="sea-email">{{ user.email }}</p>
             </div>
           </div>
         </div>

@@ -58,6 +58,14 @@ const routes = [
     }
   },
   {
+    path: "/video-call/:id",
+    name: "VideoCall",
+    component: page("page/VideoCall.vue"),
+    meta: {
+      auth: true
+    }
+  },
+  {
     path: "/friend",
     name: "Friend",
     component: page("page/Friend.vue"),
