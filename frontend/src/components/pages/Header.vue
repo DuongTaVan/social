@@ -69,7 +69,7 @@
           @click="ActiveMo"
         ></div>
         <div class="chat">
-          <span><i class="fa fa-comment" aria-hidden="true"></i><span class="message">Message</span></span>
+          <router-link tag="a" to="/chat" class="message-header"><i class="fa fa-comment" aria-hidden="true"></i><span class="message">Message</span></router-link>
         </div>
         <div class="menu--item--user">
           <ul>
@@ -136,7 +136,7 @@ export default {
     ...mapGetters(["getNameUser"]),
   },
   methods: {
-    ...mapActions(["logout", "SearchUsers"]),
+    ...mapActions(["logout", "SearchUsers", "userProfile"]),
     addClassHeader: function () {
       this.isActive = !this.isActive;
       this.menuActive = false;
@@ -163,6 +163,7 @@ export default {
     },
   },
   async created() {
+    await this.userProfile();
     this.name = this.getNameUser;
   },
 };
@@ -171,7 +172,7 @@ export default {
 @import "~../../assets/scss/header.scss";
 .chat{
   background-color: #e44d3a;
-  span{
+  .message-header{
     background-color: #e44d3a;
     color: #fff;
 
@@ -179,6 +180,10 @@ export default {
       color: #fff;
       background-color: #e44d3a;
       margin: 4px;
+    }
+    span{
+      background-color: #e44d3a;
+      color: #fff;
     }
   }
 

@@ -70,6 +70,7 @@ Route::group([
 
 ], function ($router) {
     Route::get('/list-friend', 'Friend\FriendController@getFriends');
+    Route::get('/list-friend-chat', 'Friend\FriendController@getFriendsChat');
     Route::post('/request-friend', 'Friend\FriendController@request');
     Route::post('/send-request-friend/{id}', 'Friend\FriendController@sendRequest');
     Route::post('/remove-friend/{id}', 'Friend\FriendController@remove');
@@ -98,6 +99,15 @@ Route::group([
     Route::post('/add-like-comment/{id}', 'Like\LikeController@addLikeComment');
     Route::get('/get-like-comment', 'Like\LikeController@getLikesComment');
     Route::post('/remove-like-comment/{id}', 'Like\LikeController@removeLikeComment');
+});
+
+Route::group([
+    'middleware' => ['jwt.verify', 'cors'],
+    'prefix' => 'chat'
+], function ($router) {
+    Route::get('/get-message/{id}', 'Chat\ChatController@getMessages');
+    Route::post('/add-message', 'Chat\ChatController@add');
+    Route::post('/remove-message/{id}', 'Chat\ChatController@remove');
 });
 Route::get("/docs", function () {
     return view("Api.api");

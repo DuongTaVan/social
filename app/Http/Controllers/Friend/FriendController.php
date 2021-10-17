@@ -31,7 +31,12 @@ class FriendController extends BaseController
     public function getFriends()
     {
         $users = $this->friendRepository->getFriends();
-        return FriendResource::collection($users);
+        return $users;
+    }
+    public function getFriendsChat()
+    {
+        $users = $this->friendRepository->getFriendsChat();
+        return $users;
     }
 
     /**

@@ -6,6 +6,7 @@ use http\Env\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Post;
+use App\Models\Message;
 use App\Models\Friend;
 use App\Http\Controllers\BaseController;
 use App\Http\Resources\PostResource;
@@ -26,7 +27,33 @@ class FriendRepository extends BaseController implements IFriendRepository
         }, 'userFrom' => function ($query) {
             $query->where('status', Constants::STATUS_FRIEND)->with('userTo');
         }])->get();
-        return $friends;
+        $arrUser = [];
+        foreach ($friends as $friend) {
+            if (isset($friend->userTo)) {
+                foreach ($friend->userTo as $friend1) {
+                    $arrUser[] = $friend1->userFrom->toArray();
+                }
+            }
+            if (isset($friend->userFrom)) {
+                foreach ($friend->userFrom as $friend2) {
+                    $arrUser[] = $friend2->userTo->toArray();
+                }
+            }
+        }
+        return $arrUser;
+    }
+
+    public function getFriendsChat()
+    {
+        $messages = Message::with('userTo', 'userFrom')->where('from_id', Auth::user()->id)->orWhere('to_id', Auth::user()->id)->orderByDesc('id')->get();
+        $arrUser = [];
+        foreach ($messages as $message) {
+            $dataUser = $message->userTo->id !== Auth::user()->id ? $message->userTo : $message->userFrom;
+            if (!isset($arrUser[$dataUser->id])) {
+                $arrUser[$dataUser->id] = $dataUser->toArray();
+            }
+        }
+        return array_values($arrUser);
     }
 
     /**
