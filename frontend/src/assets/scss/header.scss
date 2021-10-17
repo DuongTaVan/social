@@ -1,0 +1,187 @@
+.header {
+    position: fixed;
+    width: 100%;
+    z-index: 999;
+
+    .menuItemListPhone {
+        display: block !important;
+    }
+
+    .container {
+        background-color: #e44d3a;
+    }
+
+    a {
+        color: #fff;
+
+        &:hover {
+            text-decoration: none;
+        }
+    }
+
+    background-color: #e44d3a;
+
+    .menu {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        background-color: #e44d3a;
+
+        .lg {
+            width: 35px;
+            height: 35px;
+            padding: 0 24px;
+            background: no-repeat;
+        }
+
+        .search {
+            padding: 2px 4px;
+            border-radius: 5px;
+            position: relative;
+
+            span {
+                position: absolute;
+                right: 9px;
+                top: 5px;
+            }
+
+            input {
+                padding: 3px;
+                /* border-radius: 7px; */
+                border-color: #e44d3a;
+                border: #e44d3a;
+            }
+
+            input:focus {
+                border-color: #e44d3a;
+                outline: none;
+            }
+        }
+
+        .menu--item, .menu--item--user {
+            ul {
+                i {
+                    background-color: #e44d3a;
+                    color: #fff;
+                    margin: 4px;
+                }
+
+                background-color: #e44d3a;
+                list-style: none;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin: 0;
+                padding: 0;
+
+                li {
+                    background-color: #e44d3a;
+                    list-style: none;
+                    margin: 15px;
+
+                    span {
+                        background-color: #e44d3a;
+                        color: #fff;
+                    }
+                }
+            }
+
+            .about--me__submenu {
+                display: none;
+                padding: 0;
+                margin: 0;
+            }
+
+            .aboutMeChoose {
+                position: absolute;
+                display: block;
+                z-index: 99;
+                top: 51px;
+            }
+        }
+
+        .about--me {
+            background-color: #e44d3a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+
+            .avatar {
+                width: 43px;
+                height: 34px;
+                background: no-repeat;
+            }
+
+            span, i {
+                background-color: #e44d3a;
+                color: #fff;
+            }
+        }
+
+        .bar {
+            display: none;
+            color: #fff;
+            background-color: #e44d3a;
+            margin-right: 12px;
+
+            i {
+                color: #fff;
+                background-color: #e44d3a;
+                font-size: 20px;
+            }
+        }
+
+        .fa-active {
+            transform: rotate(180deg);
+            transition: all 0.3s;
+        }
+
+        .user-name {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .mo {
+            background-color: #dac6c626;
+            min-height: 300vh;
+            position: absolute;
+            width: 100%;
+            left: -9px;
+            z-index: 1;
+            top: 52px;
+        }
+    }
+
+    @media only screen and (max-width: 600px) {
+        .bar {
+            display: block !important;
+        }
+        .user-name {
+            width: 13px;
+        }
+        .menu--item_list {
+            display: block !important;
+            position: absolute;
+            z-index: 999;
+            left: -148px;
+            top: 51px;
+            transition: all .5s;
+        }
+        .menu--item_list_active {
+            left: 0;
+        }
+        .aboutMeChoose {
+            right: 0;
+        }
+        .message{
+            display: none;
+        }
+        .fa-comment{
+            font-size: 18px;
+            margin-left: 12px;
+        }
+
+    }
+}

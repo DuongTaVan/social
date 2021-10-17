@@ -1,0 +1,397 @@
+FORMAT: 1A
+
+# Group Authenticate SOCIAL
+
+## Register [/auth/api/register]
+### Register [POST]
++ Response 200 (application/json)
+
+[
+    {
+    "message": "user successfully registered",
+    "users": [
+        {
+        "name": "John Doe",
+        "email": "john@gmail.com",
+        "phone": 0939748336,
+        "block": ['1','2'],
+        "updated_at": "2020-06-16T20:42:51.0000z",
+        "created_at": "2020-06-16T20:42:51.0000z"
+        }
+    ]
+    }
+]
+
+## Login [/auth/api/login]
+### Login [POST]
+
+You need to enter your email and password
+
++ Request 200 (application/json)
+
+{
+    "accecss_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC8xMjcuMC4wLjE6ODAwMFwvYXBpXC9hdXRoXC9sb2dpbiIsImlhdCI6MTYxODM4NTc3NywiZXhwIjoxNjE4Mzg5Mzc3LCJuYmYiOjE2MTgzODU3NzcsImp0aSI6InhWZWRob01RSWVxdUJ2NUwiLCJzdWIiOjU1LCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.W7P-dwrVey6dEwvVflBMmDyySUgCdPEt_kljSecaYmc",
+    "user": [
+        "name" => "john Doe"",
+        "email" => "john@gmail.com",
+        "phone" => "031355454232"
+        "updated_at": "2020-06-16T20:42:51.0000z",
+        "created_at": "2020-06-16T20:42:51.0000z"
+        ]
+}
+
++ Response 422 (application/json)
+
+{
+    "error": "Unauthorized",
+}
+## refresh [/auth/api/refresh]
+### refresh [POST]
++ Request 200 (application/json)
+
+{
+    "access_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC8xMjcuMC4wLjE6ODAwMFwvYXBpXC9hdXRoXC9yZWZyZXNoIiwiaWF0IjoxNjE4Mzg2MjU1LCJleHAiOjE2MTgzODk4ODYsIm5iZiI6MTYxODM4NjI4NiwianRpIjoicDNQM2t1N3QweDQwMjNSeCIsInN1YiI6NTUsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.1s-7ZoqP2Kvwfp39DTVs2TmRPiHPYG4muWHVUBzcVIM",
+    "token_type": "bearer",
+    "expires_in": 3600,
+    "user": {
+        "id": 55,
+        "name": "duongtv",
+        "email": "duongtv2712@gmail.com",
+        "phone": null,
+        "block": null,
+        "token_reset_password": null,
+        "token_reset_password_at": null,
+        "created_at": "2021-04-14T07:36:03.000000Z",
+        "updated_at": "2021-04-14T07:36:03.000000Z"
+    }
+}
+## Login [/auth/api/user-profile]
+### user-profile [GET]
++ response 200 (application/json)
+{
+    "id": 55,
+    "name": "duongtv",
+    "email": "duongtv2712@gmail.com",
+    "phone": null,
+    "block": null,
+    "token_reset_password": "8ujYLgOWg97Svws8khD8TyYUYZP3A9Ak3aVYHhWpfzq0qXJwmkO04TuZu38ZS5F1XWb1ECk27CN3JbRN",
+    "token_reset_password_at": "2021-04-14 15:08:07",
+    "created_at": "2021-04-14T07:36:03.000000Z",
+    "updated_at": "2021-04-14T08:08:07.000000Z"
+}
+## Logout [/auth/api/logout]
+### logout [POST]
++ Response 200 (application/json)
+    "User successfully signed out"
+## reset password [/auth/api/reset-password-request]
+### Reset password [POST]
++ response 200 (application/json)
+    "Check your inbox, we have sent a link to reset email"
+## Change password [/auth/api/change-password]
+### Change password [POST]
++ response 200 (application/json)
+    "change password success !"
+## Check token reset password at [/check-token-reset-password-at/{token}]
+### Check token reset password at [GET]
++ response 404 (application/json)
+{
+    "error": "change password every 5 minutes"
+}
++ response 404 (application/json)
+{
+    "password change over time"
+}
+
+FORMAT: 1A
+
+# Group User SOCIAL
+
+## LIST USER BLOCK [/api/user/list-user-block]
+### List user block [GET]
++ Response 200 (application/json)
+
+[
+    {
+
+    "data": [
+            {
+                "id": 5,
+                "name": "Nick Gutkowski",
+                "email": "von.greta@example.org",
+                "phone": "(272) 979-0956",
+                "created_at": "2021-04-12T04:02:05.000000Z",
+                "updated_at": "2021-04-12T04:02:05.000000Z"
+            },
+            {
+                "id": 6,
+                "name": "Jerome Lesch",
+                "email": "joannie.nitzsche@example.com",
+                "phone": "+1-678-265-5737",
+                "created_at": "2021-04-12T04:02:05.000000Z",
+                "updated_at": "2021-04-12T04:02:05.000000Z"
+            },
+            {
+                "id": 1,
+                "name": "Meta Armstrong",
+                "email": "gkulas@example.com",
+                "phone": "+19306800711",
+                "created_at": "2021-04-12T04:02:05.000000Z",
+                "updated_at": "2021-04-12T04:02:05.000000Z"
+            },
+            {
+                "id": 2,
+                "name": "Christ Lueilwitz",
+                "email": "unique82@example.org",
+                "phone": "(585) 552-6264",
+                "created_at": "2021-04-12T04:02:05.000000Z",
+                "updated_at": "2021-04-12T04:02:05.000000Z"
+            }
+        ]
+    }
+]
+
+## ADD USER BLOCK [/api/user/add-user-block]
+### Add user block [POST]
+
++ Request 200 (application/json)
+
+{
+    "add success"
+}
+
++ Response 404 (application/json)
+
+{
+    "error": "user already exists"
+}
+## REMOVE USER BLOCK [/api/user/remove-user-block]
+### Remove user block [POST]
+
++ Request 200 (application/json)
+
+{
+    "remove success"
+}
+
++ Response 404 (application/json)
+
+{
+    "error": "user not in the list"
+}
+## CHANGE INFORMATION [/api/user/change-information]
+### change information [POST]
+
++ Request 200 (application/json)
+
+{
+    "Change information success"
+}
+
+## SEARCH USER [/api/user/search-user]
+### change information [GET]
+
++ Request 200 (application/json)
+
+{
+    "data": [
+            {
+                "id": 3,
+                "name": "Harry Vandervort",
+                "email": "ella91@example.net",
+                "phone": "680.477.6740",
+                "created_at": "2021-04-12T04:02:05.000000Z",
+                "updated_at": "2021-04-12T04:02:05.000000Z"
+            },
+            {
+                "id": 4,
+                "name": "Dr. Jeramy Hamill IV",
+                "email": "dee51@example.org",
+                "phone": "+1-305-624-2592",
+                "created_at": "2021-04-12T04:02:05.000000Z",
+                "updated_at": "2021-04-12T04:02:05.000000Z"
+            },
+            {
+                "id": 10,
+                "name": "Geovany Hansen",
+                "email": "monserrate18@example.net",
+                "phone": "223-692-1434",
+                "created_at": "2021-04-12T04:02:05.000000Z",
+                "updated_at": "2021-04-12T04:02:05.000000Z"
+            },
+            {
+                "id": 14,
+                "name": "Hal Fadel II",
+                "email": "haag.logan@example.com",
+                "phone": "734-689-9565",
+                "created_at": "2021-04-12T04:02:05.000000Z",
+                "updated_at": "2021-04-12T04:02:05.000000Z"
+            },
+            {
+                "id": 32,
+                "name": "Mohamed Weimann",
+                "email": "ottilie.cummerata@example.org",
+                "phone": "(863) 533-6935",
+                "created_at": "2021-04-12T04:02:05.000000Z",
+                "updated_at": "2021-04-12T04:02:05.000000Z"
+            },
+            {
+                "id": 41,
+                "name": "Mr. Giuseppe Harris III",
+                "email": "mante.alexandro@example.org",
+                "phone": "(341) 449-4142",
+                "created_at": "2021-04-12T04:02:05.000000Z",
+                "updated_at": "2021-04-12T04:02:05.000000Z"
+            }
+        ],
+        "links": {
+            "first": "http://127.0.0.1:8000/api/user/search-user?page=1",
+            "last": "http://127.0.0.1:8000/api/user/search-user?page=1",
+            "prev": null,
+            "next": null
+        },
+        "meta": {
+            "current_page": 1,
+            "from": 1,
+            "last_page": 1,
+            "links": [
+                {
+                    "url": null,
+                    "label": "&laquo; Previous",
+                    "active": false
+                },
+                {
+                    "url": "http://127.0.0.1:8000/api/user/search-user?page=1",
+                    "label": "1",
+                    "active": true
+                },
+                {
+                    "url": null,
+                    "label": "Next &raquo;",
+                    "active": false
+                }
+            ],
+            "path": "http://127.0.0.1:8000/api/user/search-user",
+            "per_page": 8,
+            "to": 6,
+            "total": 6
+        }
+}
+
+
+FORMAT: 1A
+
+# Group COMMENT SOCIAL
+
+## LIST COMMENT [/api/comment/list-comment/1]
+### List comment[GET]
++ Response 200 (application/json)
+
+[
+    {
+
+       "data": [
+               {
+                   "id": 6,
+                   "content": "fafafa",
+                   "comment_id": null,
+                   "post_id": 117,
+                   "user_id": 37,
+                   "created_at": null,
+                   "updated_at": null,
+                   "rep_comment": []
+               }
+           ]
+        }
+]
+## ADD COMMENT [/api/comment/add-comment/1]
+### Add comment[POST]
++ Response 200 (application/json)
+
+[
+    {
+
+       "add comment success"
+        }
+]
+## DETAIL COMMENT [/api/comment/detail-comment/1]
+### detail comment[GET]
++ Response 200 (application/json)
+
+[
+    {
+        "data": {
+            "id": 6,
+            "content": "fafafa",
+            "comment_id": null,
+            "post_id": 117,
+            "user_id": 37,
+            "created_at": null,
+            "updated_at": null
+        }
+    }
+]
+## UPDATE COMMENT [/api/comment/update-comment/1]
+### update comment[POST]
++ Response 200 (application/json)
+
+[
+    {
+        "update comment  success"
+    }
+]
+## REMOVE COMMENT [/api/comment/remove-comment/1]
+### remove comment[POST]
++ Response 200 (application/json)
+
+[
+    {
+        "remove comment  success"
+    }
+]
+
+
+
+FORMAT: 1A
+
+# Group LIKE POST & COMMENT
+
+## ADD LIKE POST [/api/like/add-like/1]
+### add like post[POST]
++ Response 200 (application/json)
+
+[
+    {
+
+       "add like success"
+    }
+]
+## REMOVE LIKE [/api/like/remove-like/1]
+### remove like post[POST]
++ Response 200 (application/json)
+
+[
+    {
+
+       "remove like success"
+    }
+]
+## ADD LIKE COMMENT [/api/like/add-like-comment/1]
+### add like comment[POST]
++ Response 200 (application/json)
+
+[
+    {
+
+       "add like comment success"
+    }
+]
+## REMOVE LIKE COMMENT [/api/like/remove-like-comment/1]
+### remove like comment[POST]
++ Response 200 (application/json)
+
+[
+    {
+
+       "remove like comment success"
+    }
+]
